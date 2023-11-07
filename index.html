@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: "Lucida Console", Monaco, monospace;
+            font-size: 1.2em;
+
+        }
+
+
+
+
+        .code {
+            border: 1px solid green;
+            padding: 10px;
+        }
+
+        .green {
+            color: green;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .yellow {
+            color: yellow;
+        }
+
+        .blue {
+            color: blue;
+        }
+
+        .white {
+            color: white;
+        }
+
+        .matrix-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            background-color: black;
+
+            max-height: 90vh;
+
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            top: 40%;
+        }
+
+        .matrix-letter {
+            position: absolute;
+            color: green;
+            font-size: 20px;
+            opacity: 0;
+            animation: fall 10s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            10% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            90% {
+                transform: translateY(100vh);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        p {
+            text-align: center;
+            color: green;
+        }
+
+        .section {
+            margin-top: 92vh;
+        }
+
+        #b2 {
+            float: right;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .matrix-container {
+                display: none;
+                /* Hide the matrix animation on small screens */
+            }
+
+            .section {
+                margin-top: 20px;
+                /* Adjust the margin for the buttons on small screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="matrix-container">
+        <div class="container">
+            <div class="code">
+                <p>Kopo Keitumetse</p>
+                <span class="green">var</span>
+                <span class="white">matrix</span> = [<span class="red">"T</span>
+                <span class="yellow">h</span><span class="green">e</span>
+                <span class="blue"> </span><span class="red">M</span>
+                <span class="yellow">a</span><span class="green">t</span>
+                <span class="blue">r</span><span class="red">i</span>
+                <span class="yellow">x</span><span class="green">"</span>];
+            </div>
+        </div>
+    </div>
+    <div class="section">
+
+      
+        <a href="https://github.com/kopokeitumet">
+            <button id="b1">Github</button>
+        </a>
+        
+        <a href="cv.html">
+            <button id="b2">CV</button>
+        </a>
+    </div>
+
+    <script>
+        const matrix = ['K', 'O', 'P', 'O', ' ', 'K', 'E', 'I', 'T', 'U', 'M', 'E', 'T', 'S', 'E ', '', '.', '.', '.', '.', '.'];
+
+        const code = document.querySelector('.code');
+
+        let index = 0;
+
+        function generateRandomChar() {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            return chars[Math.floor(Math.random() * chars.length)];
+        }
+
+        function updateCode() {
+            let codeText = '';
+
+            for (let i = 0; i < matrix.length; i++) {
+                if (i === index) {
+                    codeText += generateRandomChar();
+                } else {
+                    codeText += matrix[i];
+                }
+            }
+
+            code.innerHTML = codeText;
+
+            index++;
+
+            if (index >= matrix.length) {
+                index = 0;
+            }
+        }
+
+        setInterval(updateCode, 100);
+        var container = document.querySelector('.matrix-container');
+        //var letters = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;':\",./<>? ".split("");
+        var letters = ["Technical learning",
+            "Communication skills",
+            "Cross functional skills",
+            "Interpersonal Skills",
+            "Technological savvy",
+            "Innovative",
+            "Analytical skills",
+            "Problem solving",
+            "Team player",
+            "Customer focus",
+            "Drive for results",
+            "Ethics and values",
+            "Integrity and trust",
+            "Confidentiality",
+            "Attention to detail",
+            "Business acumen",
+            "Communication skills",
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
+            , "Creating Flask applications", "Using SQLAlchemy ORM", "Defining models", "Creating database connections",
+            "Creating and executing database queries", "Working with migrations", "Handling database errors"];
+
+        function createLetter() {
+            var letter = document.createElement('div');
+            letter.classList.add('matrix-letter');
+            letter.textContent = letters[Math.floor(Math.random() * letters.length)];
+            letter.style.left = Math.floor(Math.random() * window.innerWidth) + "px";
+            container.appendChild(letter);
+
+            setTimeout(function () {
+                letter.remove();
+            }, 10000);
+        }
+
+        setInterval(createLetter, 150);
+
+    </script>
+</body>
+
+</html>
