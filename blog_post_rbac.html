@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Getting AWS Cloud Practitioner Certified: My Study Approach | Kopo@SysAdmin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#06f943","background-dark":"#0D1117","surface":"#161B22","text-main":"#C9D1D9","muted":"#8B949E","border-color":"#30363D","accent":"#58A6FF"},fontFamily:{"display":["Space Grotesk","sans-serif"],"mono":["Fira Code","monospace"],"sans":["Outfit","sans-serif"]}}}}
+    </script>
+<style>
+        body{background-color:#0D1117;color:#C9D1D9;font-family:'Outfit',sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased;}
+        h1,h2,h3{font-family:'Fira Code',monospace;font-weight:600;color:#E6EDF3;margin-top:2em;margin-bottom:0.75em;}
+        h1{font-size:2rem;line-height:1.25;margin-top:0;}
+        h2{font-size:1.35rem;border-bottom:1px solid #30363D;padding-bottom:0.3em;}
+        h3{font-size:1.1rem;color:#06f943;}
+        p{margin-bottom:1.5em;font-weight:300;}
+        a{color:#06f943;text-decoration:none;transition:all 0.2s;}
+        a:hover{text-shadow:0 0 8px rgba(6,249,67,0.35);text-decoration:underline;}
+        code{font-family:'Fira Code',monospace;font-size:0.83em;background-color:rgba(110,118,129,0.18);padding:0.2em 0.45em;border-radius:3px;color:#a5d6ff;}
+        ul,ol{margin-bottom:1.5em;padding-left:1.5em;}
+        ul li{list-style:none;position:relative;margin-bottom:0.55em;}
+        ul li::before{content:">";position:absolute;left:-1.4em;color:#06f943;font-family:'Fira Code',monospace;font-weight:bold;}
+        ol li{margin-bottom:0.55em;padding-left:0.4em;}
+        blockquote{border-left:3px solid #06f943;padding:0.5em 1em;margin:1.5em 0;background:rgba(6,249,67,0.04);color:#8B949E;font-style:italic;}
+        .callout{border:1px solid #30363D;background:#161B22;padding:1em 1.25em;margin-bottom:1.5em;border-left:3px solid #58A6FF;}
+        .callout-ok{border-left-color:#06f943;}.callout-warn{border-left-color:#e3a826;}
+        table{width:100%;border-collapse:collapse;margin-bottom:1.5em;font-family:'Fira Code',monospace;font-size:0.84em;}
+        th{background:#161B22;color:#06f943;text-align:left;padding:9px 12px;border:1px solid #30363D;}
+        td{padding:8px 12px;border:1px solid #30363D;color:#C9D1D9;}
+        tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+        .tag{display:inline-block;font-family:'Fira Code',monospace;font-size:0.75rem;padding:0.15em 0.6em;border:1px solid;margin-right:0.3em;}
+        #matrix-rain{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.10;pointer-events:none;}
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<canvas id="matrix-rain"></canvas>
+<header class="sticky top-0 z-50 w-full bg-[#0D1117]/90 backdrop-blur-sm border-b border-[#30363D]">
+<div class="max-w-[720px] mx-auto px-6 py-4 flex items-center justify-between">
+<a class="font-mono text-sm text-[#8B949E] hover:text-primary transition-colors flex items-center gap-2 group" href="blog.html"><span class="text-primary group-hover:text-white">&lt;</span> cd ../blog</a>
+<div class="text-sm font-mono text-[#8B949E] hidden sm:block"><span class="text-primary">Kopo@SysAdmin</span>:~/blog$</div>
+</div>
+</header>
+
+<main class="flex-1 w-full max-w-[720px] mx-auto px-6 py-12 md:py-20 pb-24">
+<header class="mb-12">
+<div class="font-mono text-xs text-[#8B949E] mb-4"><span class="text-primary">cat</span> aws_cloud_practitioner_study_guide.md</div>
+<h1>Getting AWS Cloud Practitioner Certified: My Study Approach</h1>
+<div class="flex flex-wrap items-center gap-4 text-sm font-mono text-[#8B949E] mt-5 border-t border-[#30363D] pt-5">
+<span>2024-08-15</span><span class="text-[#30363D]">|</span><span>7 min read</span><span class="text-[#30363D]">|</span>
+<span class="tag" style="color:#58A6FF;border-color:rgba(88,166,255,0.3);background:rgba(88,166,255,0.05)">tutorial</span>
+<span class="tag" style="color:#06f943;border-color:rgba(6,249,67,0.3);background:rgba(6,249,67,0.05)">aws</span>
+<span class="tag" style="color:#8B949E;border-color:rgba(139,148,158,0.3)">certification</span>
+</div>
+</header>
+
+<article>
+<p>The AWS Cloud Practitioner (CLF-C02) is the entry point into the AWS certification path. It's not a technical deep-dive — there's no hands-on lab component and no architecture design. What it tests is whether you understand the AWS ecosystem well enough to make informed decisions: which services exist, what they do, how the pricing model works, and what the shared responsibility model means in practice. For an on-premise IT administrator moving toward cloud-adjacent roles, that framing is exactly right.</p>
+
+<p>This is how I studied for and passed it, coming from a background in on-premise infrastructure with no prior AWS experience.</p>
+
+<h2>1. What the Exam Actually Tests</h2>
+<p>The CLF-C02 is split into four domains. Understanding the weight of each domain is the first step in allocating study time:</p>
+
+<table>
+<thead><tr><th>Domain</th><th>Weight</th><th>What It Covers</th></tr></thead>
+<tbody>
+<tr><td>Cloud Concepts</td><td>24%</td><td>What cloud is, the six advantages of cloud, deployment models</td></tr>
+<tr><td>Security & Compliance</td><td>30%</td><td>Shared responsibility, IAM, compliance programs, encryption</td></tr>
+<tr><td>Cloud Technology</td><td>34%</td><td>Core services: EC2, S3, RDS, VPC, Lambda, Route 53, CloudFront</td></tr>
+<tr><td>Billing & Pricing</td><td>12%</td><td>Pricing models, cost management tools, support plans</td></tr>
+</tbody>
+</table>
+
+<p>Cloud Technology and Security together make up 64% of the exam. Everything else supports those two sections.</p>
+
+<h2>2. Study Resources (What I Used)</h2>
+
+<h3>AWS Skill Builder — Free Tier</h3>
+<p>AWS's own learning platform has a free Cloud Practitioner Essentials course that covers the full exam scope. It's dry but comprehensive. I used it for initial exposure to every domain — one module per day over two weeks. Do not skip the knowledge checks at the end of each module; they're better exam preparation than they look.</p>
+
+<h3>Practice Exams</h3>
+<p>The most important resource by far. I used two sets:</p>
+<ul>
+<li><strong>AWS Official Practice Question Set</strong> (free on Skill Builder) — 20 questions, explains every answer. Do this first.</li>
+<li><strong>Tutorials Dojo CLF-C02 Practice Exams</strong> — 6 full practice exams, 65 questions each. Harder than the real exam, which is the point.</li>
+</ul>
+<p>I ran practice exams until I was consistently scoring above 85%. The real exam felt easier after that.</p>
+
+<h2>3. The Services You Must Know</h2>
+<p>The exam does not test every AWS service in depth, but it does expect you to recognise what the core services are for and roughly when you would use each one. These are the ones that appeared most frequently:</p>
+
+<table>
+<thead><tr><th>Service</th><th>What It Is</th><th>On-Prem Analogy</th></tr></thead>
+<tbody>
+<tr><td>EC2</td><td>Virtual machines in the cloud</td><td>Physical / VM server</td></tr>
+<tr><td>S3</td><td>Object storage — files, backups, static assets</td><td>File server / NAS</td></tr>
+<tr><td>RDS</td><td>Managed relational databases (MySQL, PostgreSQL, etc.)</td><td>SQL Server on-prem</td></tr>
+<tr><td>VPC</td><td>Your private network inside AWS</td><td>LAN / VLAN</td></tr>
+<tr><td>IAM</td><td>Users, roles, permissions — who can do what</td><td>Active Directory</td></tr>
+<tr><td>Lambda</td><td>Run code without managing servers</td><td>Scheduled Task / script</td></tr>
+<tr><td>CloudWatch</td><td>Monitoring, logs, alarms</td><td>SCOM / Zabbix</td></tr>
+<tr><td>Route 53</td><td>DNS service</td><td>Internal DNS server</td></tr>
+<tr><td>CloudFront</td><td>Content delivery network</td><td>CDN / proxy cache</td></tr>
+<tr><td>Trusted Advisor</td><td>Recommendations for cost, security, performance</td><td>—</td></tr>
+</tbody>
+</table>
+
+<h2>4. The Shared Responsibility Model — Learn It Cold</h2>
+<p>This concept appears in multiple questions across Security and Cloud Concepts. The model is simple in principle: AWS is responsible for security <em>of</em> the cloud (physical infrastructure, hypervisors, hardware), and you are responsible for security <em>in</em> the cloud (your data, your OS configuration, your IAM policies, your application security).</p>
+
+<blockquote>"AWS patches the hypervisor. You patch your EC2 instances."</blockquote>
+
+<p>Where it gets tricky in exam questions is at the service boundary. RDS is a managed service — AWS patches the database engine. EC2 is not managed — you patch the OS and any software running on it. Lambda is fully managed — you're only responsible for your function code. Know which services shift responsibility to AWS and which leave it with you.</p>
+
+<h2>5. My Study Timeline</h2>
+<ol>
+<li><strong>Week 1–2:</strong> AWS Skill Builder course, one module daily. Notes on each domain.</li>
+<li><strong>Week 3:</strong> Official practice question set. Identify weak domains (mine was Billing).</li>
+<li><strong>Week 4:</strong> Tutorials Dojo practice exams — two full exams, review every wrong answer.</li>
+<li><strong>Week 5:</strong> Two more practice exams. Read the AWS whitepapers for shared responsibility and pricing.</li>
+<li><strong>Exam day:</strong> Scheduled morning slot. Passed.</li>
+</ol>
+
+<div class="callout callout-ok">
+<strong>For on-prem admins:</strong> The cloud concepts feel abstract until you map them to things you already know. IAM is Active Directory. VPC is your LAN. Security Groups are your host-based firewall. Once the translation clicks, the rest follows quickly.
+</div>
+
+<h2>What Comes Next</h2>
+<p>Cloud Practitioner is the foundation, not the destination. My next step is AWS Solutions Architect Associate (SAA-C03), which moves from conceptual understanding into actual architecture — designing multi-tier applications, choosing the right storage class, building resilient systems. That's where the on-prem to cloud translation becomes genuinely useful.</p>
+
+<p>Questions on the study approach — <a href="mailto:kkeitumetse09@gmail.com">kkeitumetse09@gmail.com</a>.</p>
+</article>
+
+<footer class="mt-16 border-t border-[#30363D] pt-8 pb-12">
+<div class="flex items-center justify-between font-mono text-sm text-[#8B949E]">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">terminal</span> EOF</span>
+<a class="hover:text-primary transition-colors" href="#top">return to top ^</a>
+</div>
+</footer>
+</main>
+
+<div class="fixed bottom-0 left-0 w-full h-8 bg-[#161B22] border-t border-[#30363D] flex items-center justify-between px-4 text-xs font-mono text-[#8B949E] z-50">
+<div class="flex items-center gap-4"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> SYSTEM: ONLINE</span></div>
+<div><span class="text-primary">~/blog/aws_cloud_practitioner_study_guide.md</span></div>
+</div>
+<script>(function matrixRain(){const canvas=document.getElementById('matrix-rain'),ctx=canvas.getContext('2d'),BG='rgba(13,17,23,0.05)',GREEN='#06f943',BRIGHT='#ccffcc',FS=14,CHARS='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';let cols,drops;function init(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/FS);drops=Array.from({length:cols},()=>Math.floor(Math.random()*-60));}function draw(){ctx.fillStyle=BG;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font=FS+'px monospace';for(let i=0;i<cols;i++){const char=CHARS[Math.floor(Math.random()*CHARS.length)];ctx.fillStyle=Math.random()>0.95?BRIGHT:GREEN;ctx.fillText(char,i*FS,drops[i]*FS);if(drops[i]*FS>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++;}}init();setInterval(draw,50);window.addEventListener('resize',init);})();</script>
+</body></html>

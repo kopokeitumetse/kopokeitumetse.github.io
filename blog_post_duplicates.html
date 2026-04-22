@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Duplicate File Scanner Script | Kopo@SysAdmin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#06f943","background-dark":"#0D1117","surface":"#161B22","text-main":"#C9D1D9","muted":"#8B949E","border-color":"#30363D","accent":"#58A6FF"},fontFamily:{"display":["Space Grotesk","sans-serif"],"mono":["Fira Code","monospace"],"sans":["Outfit","sans-serif"]}}}}
+    </script>
+<style>
+        body{background-color:#0D1117;color:#C9D1D9;font-family:'Outfit',sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased;}
+        h1,h2,h3{font-family:'Fira Code',monospace;font-weight:600;color:#E6EDF3;margin-top:2em;margin-bottom:0.75em;}
+        h1{font-size:2rem;line-height:1.25;margin-top:0;}
+        h2{font-size:1.35rem;border-bottom:1px solid #30363D;padding-bottom:0.3em;}
+        h3{font-size:1.1rem;color:#06f943;}
+        p{margin-bottom:1.5em;font-weight:300;}
+        a{color:#06f943;text-decoration:none;transition:all 0.2s;}
+        a:hover{text-shadow:0 0 8px rgba(6,249,67,0.35);text-decoration:underline;}
+        code{font-family:'Fira Code',monospace;font-size:0.83em;background-color:rgba(110,118,129,0.18);padding:0.2em 0.45em;border-radius:3px;color:#a5d6ff;}
+        pre{background-color:#161B22;border:1px solid #30363D;padding:18px 20px;overflow-x:auto;margin-bottom:1.5em;}
+        pre code{background:transparent;padding:0;font-size:0.84em;color:#C9D1D9;}
+        .kw{color:#FF7B72;}.str{color:#A5D6FF;}.cmt{color:#8B949E;font-style:italic;}.fn{color:#D2A8FF;}.num{color:#79C0FF;}.var{color:#FFA657;}
+        .prompt{color:#06f943;user-select:none;}
+        ul,ol{margin-bottom:1.5em;padding-left:1.5em;}
+        ul li{list-style:none;position:relative;margin-bottom:0.55em;}
+        ul li::before{content:">";position:absolute;left:-1.4em;color:#06f943;font-family:'Fira Code',monospace;font-weight:bold;}
+        ol li{margin-bottom:0.55em;padding-left:0.4em;}
+        blockquote{border-left:3px solid #06f943;padding:0.5em 1em;margin:1.5em 0;background:rgba(6,249,67,0.04);color:#8B949E;font-style:italic;}
+        .callout{border:1px solid #30363D;background:#161B22;padding:1em 1.25em;margin-bottom:1.5em;border-left:3px solid #58A6FF;}
+        .callout-warn{border-left-color:#e3a826;}.callout-ok{border-left-color:#06f943;}
+        .download-btn{display:inline-flex;align-items:center;gap:0.6rem;background:#06f943;color:#0D1117;font-family:'Fira Code',monospace;font-weight:600;font-size:0.95rem;padding:0.75rem 1.5rem;border:none;cursor:pointer;text-decoration:none;transition:all 0.2s;}
+        .download-btn:hover{background:#00d435;box-shadow:0 0 20px rgba(6,249,67,0.3);text-decoration:none;color:#0D1117;}
+        .download-box{border:1px solid #30363D;background:#161B22;padding:1.5rem 2rem;margin:2rem 0;border-left:3px solid #06f943;}
+        table{width:100%;border-collapse:collapse;margin-bottom:1.5em;font-family:'Fira Code',monospace;font-size:0.84em;}
+        th{background:#161B22;color:#06f943;text-align:left;padding:9px 12px;border:1px solid #30363D;}
+        td{padding:8px 12px;border:1px solid #30363D;color:#C9D1D9;}
+        tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+        .tag{display:inline-block;font-family:'Fira Code',monospace;font-size:0.75rem;padding:0.15em 0.6em;border:1px solid;margin-right:0.3em;}
+        #matrix-rain{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.10;pointer-events:none;}
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<canvas id="matrix-rain"></canvas>
+
+<header class="sticky top-0 z-50 w-full bg-[#0D1117]/90 backdrop-blur-sm border-b border-[#30363D]">
+<div class="max-w-[720px] mx-auto px-6 py-4 flex items-center justify-between">
+<a class="font-mono text-sm text-[#8B949E] hover:text-primary transition-colors flex items-center gap-2 group" href="blog.html">
+<span class="text-primary group-hover:text-white transition-colors">&lt;</span> cd ../blog
+</a>
+<div class="text-sm font-mono text-[#8B949E] hidden sm:block"><span class="text-primary">Kopo@SysAdmin</span>:~/blog$</div>
+</div>
+</header>
+
+<main class="flex-1 w-full max-w-[720px] mx-auto px-6 py-12 md:py-20 pb-24">
+<header class="mb-10">
+<div class="font-mono text-xs text-[#8B949E] mb-4 flex items-center gap-2">
+<span class="text-primary">cat</span> find_duplicate_files.ps1
+</div>
+<h1>Duplicate File Scanner (PowerShell)</h1>
+<div class="flex flex-wrap items-center gap-4 text-sm font-mono text-[#8B949E] mt-5 border-t border-[#30363D] pt-5">
+<span>2025-04-22</span>
+<span class="text-[#30363D]">|</span>
+<span>5 min read</span>
+<span class="text-[#30363D]">|</span>
+<span class="tag" style="color:#e3a826;border-color:rgba(227,168,38,0.3);background:rgba(227,168,38,0.05)">script</span>
+<span class="tag" style="color:#58A6FF;border-color:rgba(88,166,255,0.3);background:rgba(88,166,255,0.05)">powershell</span>
+<span class="tag" style="color:#8B949E;border-color:rgba(139,148,158,0.3)">windows</span>
+</div>
+</header>
+
+<!-- DOWNLOAD BOX -->
+<div class="download-box">
+<p style="margin-bottom:0.75rem;font-family:'Fira Code',monospace;font-size:0.9rem;color:#8B949E;">Find-DuplicateFiles.ps1 &nbsp;|&nbsp; PowerShell 5.1+ &nbsp;|&nbsp; Read-only — never deletes files</p>
+<a class="download-btn" href="Find-DuplicateFiles.ps1" download="Find-DuplicateFiles.ps1">
+<span class="material-symbols-outlined" style="font-size:1.1rem;">download</span>
+Download Script
+</a>
+<p style="margin-top:1rem;margin-bottom:0;font-size:0.82rem;color:#8B949E;font-family:'Fira Code',monospace;">
+Run: <code>powershell -ExecutionPolicy Bypass -File .\Find-DuplicateFiles.ps1</code>
+</p>
+</div>
+
+<article>
+
+<h2>The Problem</h2>
+
+<p>Duplicate files are a silent drain on storage. After inheriting IT environments from previous admins, I've found the same pattern repeatedly: a shared drive or user machine that's technically "almost full" turns out to have 8–15% of its storage consumed by exact duplicate files — same content, different names, scattered across different folders. Photos copied to multiple backup folders. Documents saved under slightly different names. Downloaded installers never cleared out.</p>
+
+<p>This script does a full-system scan, identifies every set of duplicate files, and exports a clear CSV report showing exactly where each duplicate lives and how much space you'd recover by removing it. It never touches, moves, or deletes anything — the decisions are yours.</p>
+
+<h2>How It Works</h2>
+
+<p>Naively comparing every file against every other file is too slow for a full system scan. The script uses a two-phase approach to keep it practical:</p>
+
+<ol>
+<li><strong>Size pre-filter:</strong> Files with unique sizes cannot possibly be duplicates. Only files sharing a size with at least one other file are sent to the hashing phase. On a typical system this eliminates 60–80% of files immediately.</li>
+<li><strong>SHA256 hashing:</strong> Candidate files are hashed. Files with identical hashes are confirmed duplicates — same content byte for byte, regardless of filename.</li>
+</ol>
+
+<pre><code><span class="cmt"># What the two-phase approach looks like in numbers (example system)</span>
+Total files found       : 284,312
+Skipped (unique size)   : 241,088   <span class="cmt"># eliminated without hashing</span>
+Candidates hashed       :  43,224
+Duplicate groups found  :   1,847
+Reclaimable space       :  23.4 GB</code></pre>
+
+<h2>Usage</h2>
+
+<h3>Basic — scan all fixed drives</h3>
+<pre><code><span class="prompt">PS&gt;</span> .\Find-DuplicateFiles.ps1</code></pre>
+
+<h3>Scan a specific folder only</h3>
+<pre><code><span class="prompt">PS&gt;</span> .\Find-DuplicateFiles.ps1 -ScanPath <span class="str">"C:\Users"</span></code></pre>
+
+<h3>Focus on large files (minimum 50 MB)</h3>
+<pre><code><span class="prompt">PS&gt;</span> .\Find-DuplicateFiles.ps1 -MinSizeKB <span class="num">51200</span></code></pre>
+
+<h3>Save report to a custom location</h3>
+<pre><code><span class="prompt">PS&gt;</span> .\Find-DuplicateFiles.ps1 -OutputPath <span class="str">"C:\Reports\duplicates.csv"</span></code></pre>
+
+<div class="callout callout-warn">
+<strong>Run as Administrator</strong> for full system access. Without elevation, files in system-protected directories will be skipped silently. System folders (Windows, Program Files, Temp) are excluded by default regardless.
+</div>
+
+<h2>Understanding the CSV Report</h2>
+
+<p>The output CSV has one row per duplicate file. Each set of duplicates shares a <code>DuplicateGroup</code> number, so you can sort or filter by group in Excel.</p>
+
+<table>
+<thead><tr><th>Column</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>DuplicateGroup</td><td>All files with the same number are exact duplicates of each other</td></tr>
+<tr><td>FileName</td><td>Just the filename</td></tr>
+<tr><td>FullPath</td><td>Complete path including drive — where the file actually lives</td></tr>
+<tr><td>Drive</td><td>Which drive the file is on (C:, D:, etc.)</td></tr>
+<tr><td>SizeMB</td><td>File size in megabytes</td></tr>
+<tr><td>LastModified</td><td>Last write timestamp — oldest is likely the original</td></tr>
+<tr><td>CopiesInGroup</td><td>Total number of copies of this file found</td></tr>
+<tr><td>WastedSpaceMB</td><td>Storage you'd recover by keeping only one copy</td></tr>
+<tr><td>SHA256Hash</td><td>The file hash — all duplicates in a group share this value</td></tr>
+</tbody>
+</table>
+
+<p>Within each duplicate group, the oldest file is listed first. This is usually (not always) the original. Never delete files blindly based on the report — open both copies and verify before removing anything.</p>
+
+<h2>Example Output (Terminal)</h2>
+
+<pre><code>  ╔══════════════════════════════════════════════════════╗
+  ║         DUPLICATE FILE SCANNER  v1.0                 ║
+  ╚══════════════════════════════════════════════════════╝
+
+  [+] Scan paths   : C:\ | D:\
+  [+] Min file size: 1 KB
+  [+] Output file  : C:\Users\kopo\Desktop\DuplicateFiles_2025-04-22_143022.csv
+
+  Phase 1 — Collecting files
+  [*] Scanning C:\ ...
+  [+]   183,441 files collected from C:\
+  [+] Total files collected: 183,441
+
+  Phase 2 — Grouping by size (pre-filter)
+  [+] Unique-size files skipped: 156,200
+  [+] Candidate files for hashing: 27,241
+
+  Phase 3 — Hashing candidate files (SHA256)
+  [*] This may take several minutes on a full system scan...
+
+  Phase 4 — Identifying duplicates
+  [+] Duplicate groups found : 1,204
+  [+] Total duplicate files  : 3,891
+  [+] Reclaimable space      : 14.73 MB  (0.014 GB)
+  [+] Report saved to        : C:\Users\kopo\Desktop\DuplicateFiles_2025-04-22_143022.csv</code></pre>
+
+<div class="callout callout-ok">
+<strong>Safe by design:</strong> The script is strictly read-only. It uses <code>Get-ChildItem</code> and <code>Get-FileHash</code> — no write operations of any kind. You can run it on a production machine without risk.
+</div>
+
+<h2>Requirements</h2>
+<ul>
+<li>Windows with PowerShell 5.1 or later (built into Windows 10/11)</li>
+<li>Run as Administrator for full drive access</li>
+<li>If execution policy blocks the script: <code>powershell -ExecutionPolicy Bypass -File .\Find-DuplicateFiles.ps1</code></li>
+</ul>
+
+<p>Questions, improvements, or issues — <a href="mailto:kkeitumetse09@gmail.com">kkeitumetse09@gmail.com</a>.</p>
+
+</article>
+
+<footer class="mt-16 border-t border-[#30363D] pt-8 pb-12">
+<div class="flex items-center justify-between font-mono text-sm text-[#8B949E]">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">terminal</span> EOF</span>
+<a class="hover:text-primary transition-colors" href="#top">return to top ^</a>
+</div>
+</footer>
+</main>
+
+<div class="fixed bottom-0 left-0 w-full h-8 bg-[#161B22] border-t border-[#30363D] flex items-center justify-between px-4 text-xs font-mono text-[#8B949E] z-50">
+<div class="flex items-center gap-4"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> SYSTEM: ONLINE</span></div>
+<div><span class="text-primary">~/blog/find_duplicate_files.ps1</span></div>
+</div>
+
+<script>
+    (function matrixRain(){const canvas=document.getElementById('matrix-rain'),ctx=canvas.getContext('2d'),BG='rgba(13,17,23,0.05)',GREEN='#06f943',BRIGHT='#ccffcc',FS=14,CHARS='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';let cols,drops;function init(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/FS);drops=Array.from({length:cols},()=>Math.floor(Math.random()*-60));}function draw(){ctx.fillStyle=BG;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font=FS+'px monospace';for(let i=0;i<cols;i++){const char=CHARS[Math.floor(Math.random()*CHARS.length)];ctx.fillStyle=Math.random()>0.95?BRIGHT:GREEN;ctx.fillText(char,i*FS,drops[i]*FS);if(drops[i]*FS>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++;}}init();setInterval(draw,50);window.addEventListener('resize',init);})();
+</script>
+</body></html>

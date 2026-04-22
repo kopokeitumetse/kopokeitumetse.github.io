@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Building an Asset Tracker with FastAPI and SQL | Kopo@SysAdmin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#06f943","background-dark":"#0D1117","surface":"#161B22","text-main":"#C9D1D9","muted":"#8B949E","border-color":"#30363D","accent":"#58A6FF"},fontFamily:{"display":["Space Grotesk","sans-serif"],"mono":["Fira Code","monospace"],"sans":["Outfit","sans-serif"]}}}}
+    </script>
+<style>
+        body{background-color:#0D1117;color:#C9D1D9;font-family:'Outfit',sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased;}
+        h1,h2,h3{font-family:'Fira Code',monospace;font-weight:600;color:#E6EDF3;margin-top:2em;margin-bottom:0.75em;}
+        h1{font-size:2rem;line-height:1.25;margin-top:0;}
+        h2{font-size:1.35rem;border-bottom:1px solid #30363D;padding-bottom:0.3em;}
+        h3{font-size:1.1rem;color:#06f943;}
+        p{margin-bottom:1.5em;font-weight:300;}
+        a{color:#06f943;text-decoration:none;transition:all 0.2s;}
+        a:hover{text-shadow:0 0 8px rgba(6,249,67,0.35);text-decoration:underline;}
+        code{font-family:'Fira Code',monospace;font-size:0.83em;background-color:rgba(110,118,129,0.18);padding:0.2em 0.45em;border-radius:3px;color:#a5d6ff;}
+        pre{background-color:#161B22;border:1px solid #30363D;padding:18px 20px;overflow-x:auto;margin-bottom:1.5em;}
+        pre code{background:transparent;padding:0;font-size:0.84em;color:#C9D1D9;}
+        .kw{color:#FF7B72;}.str{color:#A5D6FF;}.cmt{color:#8B949E;font-style:italic;}.fn{color:#D2A8FF;}.num{color:#79C0FF;}.var{color:#FFA657;}.cls{color:#79C0FF;}
+        ul,ol{margin-bottom:1.5em;padding-left:1.5em;}
+        ul li{list-style:none;position:relative;margin-bottom:0.55em;}
+        ul li::before{content:">";position:absolute;left:-1.4em;color:#06f943;font-family:'Fira Code',monospace;font-weight:bold;}
+        ol li{margin-bottom:0.55em;padding-left:0.4em;}
+        blockquote{border-left:3px solid #06f943;padding:0.5em 1em;margin:1.5em 0;background:rgba(6,249,67,0.04);color:#8B949E;font-style:italic;}
+        .callout{border:1px solid #30363D;background:#161B22;padding:1em 1.25em;margin-bottom:1.5em;border-left:3px solid #58A6FF;}
+        .callout-ok{border-left-color:#06f943;}
+        .tag{display:inline-block;font-family:'Fira Code',monospace;font-size:0.75rem;padding:0.15em 0.6em;border:1px solid;margin-right:0.3em;}
+        #matrix-rain{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.10;pointer-events:none;}
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<canvas id="matrix-rain"></canvas>
+
+<header class="sticky top-0 z-50 w-full bg-[#0D1117]/90 backdrop-blur-sm border-b border-[#30363D]">
+<div class="max-w-[720px] mx-auto px-6 py-4 flex items-center justify-between">
+<a class="font-mono text-sm text-[#8B949E] hover:text-primary transition-colors flex items-center gap-2 group" href="blog.html">
+<span class="text-primary group-hover:text-white transition-colors">&lt;</span> cd ../blog
+</a>
+<div class="text-sm font-mono text-[#8B949E] hidden sm:block"><span class="text-primary">Kopo@SysAdmin</span>:~/blog$</div>
+</div>
+</header>
+
+<main class="flex-1 w-full max-w-[720px] mx-auto px-6 py-12 md:py-20 pb-24">
+<header class="mb-12">
+<div class="font-mono text-xs text-[#8B949E] mb-4 flex items-center gap-2">
+<span class="text-primary">cat</span> building_asset_tracker_fastapi_sql.md
+</div>
+<h1>Building an Asset Tracker with FastAPI and SQL</h1>
+<div class="flex flex-wrap items-center gap-4 text-sm font-mono text-[#8B949E] mt-5 border-t border-[#30363D] pt-5">
+<span>2024-09-30</span>
+<span class="text-[#30363D]">|</span>
+<span>9 min read</span>
+<span class="text-[#30363D]">|</span>
+<span class="tag" style="color:#58A6FF;border-color:rgba(88,166,255,0.3);background:rgba(88,166,255,0.05)">tutorial</span>
+<span class="tag" style="color:#06f943;border-color:rgba(6,249,67,0.3);background:rgba(6,249,67,0.05)">fastapi</span>
+<span class="tag" style="color:#8B949E;border-color:rgba(139,148,158,0.3)">python</span>
+</div>
+</header>
+
+<article>
+
+<p>Before I built the Equipment Management System, asset tracking at Leading Edge Markets was done in a shared Excel spreadsheet. It worked until it didn't — concurrent edits caused data loss, nobody had a clear picture of what was assigned to whom, and preparing for an internal audit meant a half-day of cross-referencing tabs. 150+ assets, no single source of truth.</p>
+
+<p>This post walks through the architecture and key design decisions behind the EMS. I won't cover every line of code, but I'll go deep on the parts that mattered most: the data model, RBAC, the audit log, and the notification system.</p>
+
+<h2>1. Why FastAPI</h2>
+
+<p>I chose FastAPI for three reasons: it's fast to build with, the automatic OpenAPI docs are genuinely useful for a small internal tool (the operations team could explore the API themselves), and its dependency injection system makes RBAC clean to implement without a framework like Django REST Framework.</p>
+
+<p>The stack was deliberately minimal:</p>
+
+<ul>
+<li><strong>FastAPI</strong> — API layer</li>
+<li><strong>SQLite</strong> (later migrated to PostgreSQL) — storage</li>
+<li><strong>SQLAlchemy</strong> — ORM and query building</li>
+<li><strong>python-jose</strong> — JWT token handling for auth</li>
+<li><strong>Jinja2</strong> — simple HTML dashboard for non-technical staff</li>
+</ul>
+
+<h2>2. The Data Model</h2>
+
+<p>The core of the system is four tables. Everything else — service requests, notifications, reports — is built on top of these.</p>
+
+<pre><code><span class="cmt">-- assets table</span>
+<span class="kw">CREATE TABLE</span> assets (
+    id              <span class="cls">INTEGER</span> <span class="kw">PRIMARY KEY</span> AUTOINCREMENT,
+    asset_tag       <span class="cls">TEXT</span> <span class="kw">NOT NULL UNIQUE</span>,   <span class="cmt">-- e.g. "LEA-LT-042"</span>
+    description     <span class="cls">TEXT</span> <span class="kw">NOT NULL</span>,
+    category        <span class="cls">TEXT</span> <span class="kw">NOT NULL</span>,           <span class="cmt">-- Laptop, Monitor, Printer, etc.</span>
+    status          <span class="cls">TEXT</span> <span class="kw">NOT NULL</span> <span class="kw">DEFAULT</span> <span class="str">'Available'</span>,
+    assigned_to     <span class="cls">INTEGER</span> <span class="kw">REFERENCES</span> users(id),
+    assigned_date   <span class="cls">TEXT</span>,
+    purchase_date   <span class="cls">TEXT</span>,
+    warranty_expiry <span class="cls">TEXT</span>,
+    notes           <span class="cls">TEXT</span>
+);
+
+<span class="cmt">-- users table (internal staff directory)</span>
+<span class="kw">CREATE TABLE</span> users (
+    id         <span class="cls">INTEGER</span> <span class="kw">PRIMARY KEY</span> AUTOINCREMENT,
+    full_name  <span class="cls">TEXT</span> <span class="kw">NOT NULL</span>,
+    email      <span class="cls">TEXT</span> <span class="kw">NOT NULL UNIQUE</span>,
+    department <span class="cls">TEXT</span>,
+    role       <span class="cls">TEXT</span> <span class="kw">NOT NULL</span> <span class="kw">DEFAULT</span> <span class="str">'viewer'</span>  <span class="cmt">-- viewer | technician | admin</span>
+);
+
+<span class="cmt">-- service_requests table</span>
+<span class="kw">CREATE TABLE</span> service_requests (
+    id           <span class="cls">INTEGER</span> <span class="kw">PRIMARY KEY</span> AUTOINCREMENT,
+    asset_id     <span class="cls">INTEGER</span> <span class="kw">NOT NULL REFERENCES</span> assets(id),
+    requested_by <span class="cls">INTEGER</span> <span class="kw">NOT NULL REFERENCES</span> users(id),
+    request_type <span class="cls">TEXT</span> <span class="kw">NOT NULL</span>,   <span class="cmt">-- Repair | Replacement | Maintenance</span>
+    description  <span class="cls">TEXT</span>,
+    status       <span class="cls">TEXT</span> <span class="kw">DEFAULT</span> <span class="str">'Open'</span>,
+    created_at   <span class="cls">TEXT</span> <span class="kw">DEFAULT</span> (datetime(<span class="str">'now'</span>)),
+    resolved_at  <span class="cls">TEXT</span>
+);
+
+<span class="cmt">-- audit_log table — append-only, never updated or deleted</span>
+<span class="kw">CREATE TABLE</span> audit_log (
+    id          <span class="cls">INTEGER</span> <span class="kw">PRIMARY KEY</span> AUTOINCREMENT,
+    actor_id    <span class="cls">INTEGER</span> <span class="kw">REFERENCES</span> users(id),
+    action      <span class="cls">TEXT</span> <span class="kw">NOT NULL</span>,    <span class="cmt">-- ASSET_ASSIGNED, STATUS_CHANGED, etc.</span>
+    target_type <span class="cls">TEXT</span>,             <span class="cmt">-- "asset" | "service_request"</span>
+    target_id   <span class="cls">INTEGER</span>,
+    detail      <span class="cls">TEXT</span>,             <span class="cmt">-- JSON blob of changed fields</span>
+    timestamp   <span class="cls">TEXT</span> <span class="kw">DEFAULT</span> (datetime(<span class="str">'now'</span>))
+);</code></pre>
+
+<p>The <code>audit_log</code> is the most important table. No row is ever updated or deleted from it. Every state change — an asset being assigned, a service request being closed, a status being changed — writes a row here. This gave us full traceability for the audit and made it straightforward to produce a complete history for any asset.</p>
+
+<h2>3. RBAC with FastAPI Dependencies</h2>
+
+<p>Three roles: <code>viewer</code> (read-only), <code>technician</code> (can manage assets and service requests), <code>admin</code> (full access including user management). FastAPI's dependency injection makes role enforcement clean:</p>
+
+<pre><code><span class="cmt"># auth.py</span>
+<span class="kw">from</span> fastapi <span class="kw">import</span> Depends, HTTPException, status
+<span class="kw">from</span> fastapi.security <span class="kw">import</span> OAuth2PasswordBearer
+
+oauth2_scheme = <span class="fn">OAuth2PasswordBearer</span>(tokenUrl=<span class="str">"/auth/token"</span>)
+
+<span class="kw">def</span> <span class="fn">get_current_user</span>(token: <span class="cls">str</span> = <span class="fn">Depends</span>(oauth2_scheme)):
+    <span class="var">payload</span> = <span class="fn">decode_jwt</span>(token)  <span class="cmt"># raises 401 if invalid</span>
+    <span class="kw">return</span> <span class="fn">get_user_from_db</span>(payload[<span class="str">"sub"</span>])
+
+<span class="kw">def</span> <span class="fn">require_role</span>(*allowed_roles):
+    <span class="kw">def</span> <span class="fn">checker</span>(user = <span class="fn">Depends</span>(get_current_user)):
+        <span class="kw">if</span> user.role <span class="kw">not in</span> allowed_roles:
+            <span class="kw">raise</span> <span class="fn">HTTPException</span>(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=<span class="str">f"Role '{user.role}' cannot perform this action."</span>
+            )
+        <span class="kw">return</span> user
+    <span class="kw">return</span> checker
+
+<span class="cmt"># routes/assets.py — usage</span>
+@app.<span class="fn">put</span>(<span class="str">"/assets/{asset_id}/assign"</span>)
+<span class="kw">def</span> <span class="fn">assign_asset</span>(
+    asset_id: <span class="cls">int</span>,
+    payload: <span class="cls">AssignRequest</span>,
+    actor = <span class="fn">Depends</span>(<span class="fn">require_role</span>(<span class="str">"technician"</span>, <span class="str">"admin"</span>))
+):
+    <span class="cmt"># Only technicians and admins reach here</span>
+    ...</code></pre>
+
+<h2>4. Automated Notifications</h2>
+
+<p>Two notification triggers were the most valuable to the operations team:</p>
+
+<ol>
+<li><strong>Warranty expiry alerts</strong> — a daily background job checks for assets with warranty expiry within 30 days and emails the IT admin.</li>
+<li><strong>Overdue service request alerts</strong> — any open service request older than 5 business days triggers a reminder to the assigned technician.</li>
+</ol>
+
+<pre><code><span class="cmt"># scheduler.py — runs via APScheduler background task</span>
+<span class="kw">from</span> apscheduler.schedulers.background <span class="kw">import</span> BackgroundScheduler
+<span class="kw">from</span> datetime <span class="kw">import</span> date, timedelta
+
+<span class="kw">def</span> <span class="fn">check_warranty_expiry</span>():
+    <span class="var">threshold</span> = date.today() + timedelta(days=<span class="num">30</span>)
+    <span class="var">expiring</span> = db.<span class="fn">query</span>(Asset).<span class="fn">filter</span>(
+        Asset.warranty_expiry <= <span class="var">threshold</span>,
+        Asset.warranty_expiry >= date.today()
+    ).<span class="fn">all</span>()
+
+    <span class="kw">if</span> expiring:
+        <span class="var">body</span> = <span class="str">"\n"</span>.<span class="fn">join</span>([<span class="str">f"{a.asset_tag} — {a.description} (expires {a.warranty_expiry})"</span> <span class="kw">for</span> a <span class="kw">in</span> expiring])
+        <span class="fn">send_email</span>(
+            to=<span class="str">"it-admin@yourdomain.com"</span>,
+            subject=<span class="str">f"[EMS] {len(expiring)} asset(s) warranty expiring within 30 days"</span>,
+            body=<span class="var">body</span>
+        )
+
+scheduler = <span class="fn">BackgroundScheduler</span>()
+scheduler.<span class="fn">add_job</span>(check_warranty_expiry, <span class="str">"cron"</span>, hour=<span class="num">8</span>, minute=<span class="num">0</span>)
+scheduler.<span class="fn">start</span>()</code></pre>
+
+<div class="callout callout-ok">
+<strong>Outcome:</strong> Within the first three months of the EMS going live, the team identified 11 assets with warranties expiring in the next quarter — none of which had previously been flagged. Two were renewed before expiry. This alone justified the time spent building the system.
+</div>
+
+<h2>5. What I Would Change</h2>
+
+<ul>
+<li><strong>Start with PostgreSQL, not SQLite.</strong> The migration from SQLite to PostgreSQL mid-project was straightforward but unnecessary friction. If there's any chance the data grows beyond a few hundred rows, start with Postgres.</li>
+<li><strong>Add a proper front-end framework earlier.</strong> The Jinja2 dashboard worked, but as the feature set grew, it became harder to maintain than a small React or HTMX front-end would have been.</li>
+<li><strong>Build the audit log first.</strong> I added it partway through. Retrofitting it meant going back through existing routes. If you're building anything with compliance requirements, design the audit log before you write the first route.</li>
+</ul>
+
+<p>The full codebase and schema are available on request — reach me at <a href="mailto:kkeitumetse09@gmail.com">kkeitumetse09@gmail.com</a>.</p>
+
+</article>
+
+<footer class="mt-16 border-t border-[#30363D] pt-8 pb-12">
+<div class="flex items-center justify-between font-mono text-sm text-[#8B949E]">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">terminal</span> EOF</span>
+<a class="hover:text-primary transition-colors" href="#top">return to top ^</a>
+</div>
+</footer>
+</main>
+
+<div class="fixed bottom-0 left-0 w-full h-8 bg-[#161B22] border-t border-[#30363D] flex items-center justify-between px-4 text-xs font-mono text-[#8B949E] z-50">
+<div class="flex items-center gap-4"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> SYSTEM: ONLINE</span></div>
+<div><span class="text-primary">~/blog/building_asset_tracker_fastapi_sql.md</span></div>
+</div>
+
+<script>
+    (function matrixRain(){const canvas=document.getElementById('matrix-rain'),ctx=canvas.getContext('2d'),BG='rgba(13,17,23,0.05)',GREEN='#06f943',BRIGHT='#ccffcc',FS=14,CHARS='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';let cols,drops;function init(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/FS);drops=Array.from({length:cols},()=>Math.floor(Math.random()*-60));}function draw(){ctx.fillStyle=BG;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font=FS+'px monospace';for(let i=0;i<cols;i++){const char=CHARS[Math.floor(Math.random()*CHARS.length)];ctx.fillStyle=Math.random()>0.95?BRIGHT:GREEN;ctx.fillText(char,i*FS,drops[i]*FS);if(drops[i]*FS>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++;}}init();setInterval(draw,50);window.addEventListener('resize',init);})();
+</script>
+</body></html>

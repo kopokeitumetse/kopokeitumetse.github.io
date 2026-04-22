@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kopo Keitumetse - Projects</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#06f943",
+                        "background-light": "#f5f8f6",
+                        "background-dark": "#0D1117",
+                        "surface": "#161B22",
+                        "text-primary": "#C9D1D9",
+                        "text-muted": "#8B949E",
+                        "border-color": "#30363D",
+                        "accent": "#58A6FF"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["Space Grotesk", "monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "0px", "sm": "0px", "lg": "0px", "xl": "0px", "full": "0px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0D1117;
+            color: #C9D1D9;
+        }
+        
+        .nav-link {
+            position: relative;
+            color: #C9D1D9;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .nav-link:hover {
+            color: #06f943;
+        }
+        
+        .nav-link:hover::before {
+            content: '[';
+            position: absolute;
+            left: -10px;
+            color: #06f943;
+        }
+        
+        .nav-link:hover::after {
+            content: ']';
+            position: absolute;
+            right: -10px;
+            color: #06f943;
+        }
+        
+        .blinking-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: #06f943;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .diagram-pattern {
+            background-image: radial-gradient(#30363D 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+        #matrix-rain {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-background-dark min-h-screen flex flex-col font-display antialiased">
+<canvas id="matrix-rain"></canvas>
+<!-- Global Navigation -->
+<div class="relative flex h-auto w-full flex-col group/design-root overflow-x-hidden border-b border-border-color bg-background-dark">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1 w-full">
+<header class="flex flex-col sm:flex-row items-start sm:items-center justify-between whitespace-nowrap px-4 py-3 gap-4">
+<div class="flex items-center gap-3 text-text-primary">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="terminal" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<h2 class="text-text-primary text-lg font-bold leading-tight tracking-tight font-mono"><a href="index.html">Kopo@SysAdmin:~$</a></h2>
+</div>
+<nav class="flex items-center gap-6 sm:gap-9 font-mono">
+<a class="nav-link text-sm font-medium leading-normal" href="experience.html">Experience</a>
+<a class="nav-link text-primary text-sm font-medium leading-normal" href="project.html">Projects</a>
+<a class="nav-link text-sm font-medium leading-normal" href="blog.html">Blog</a>
+</nav>
+</header>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-grow w-full px-4 md:px-10 lg:px-40 py-10 flex justify-center">
+<div class="max-w-[960px] w-full flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex items-center gap-3 mb-4">
+<span class="text-primary font-mono text-xl sm:text-2xl font-bold">&gt;</span>
+<h1 class="text-text-primary text-2xl sm:text-[32px] font-bold font-mono tracking-tight">cd ./projects<span class="blinking-cursor ml-2"></span></h1>
+</div>
+<!-- Projects Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Project Card 1: Equipment Management System -->
+<article class="group bg-surface border border-border-color p-6 transition-all duration-300 hover:border-primary hover:-translate-y-1 flex flex-col h-full relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<header class="mb-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-text-primary text-xl font-bold font-mono group-hover:text-primary transition-colors">Equipment Management System</h3>
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary text-sm transition-colors" data-icon="dns">dns</span>
+</div>
+<p class="text-text-muted text-sm leading-relaxed">
+                            FastAPI and SQL-based internal application for tracking 150+ assets across full lifecycle — service requests, maintenance scheduling, and RBAC with structured audit logs. Automated notification workflows cut manual reporting time and improved SLA visibility.
+                        </p>
+</header>
+<!-- Diagram Placeholder -->
+<div class="w-full h-40 bg-background-dark border border-dashed border-border-color mb-6 flex items-center justify-center diagram-pattern relative group/diagram">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover/diagram:opacity-100 transition-opacity"></div>
+<div class="flex flex-col items-center gap-2 text-text-muted z-10">
+<span class="material-symbols-outlined text-2xl" data-icon="schema">schema</span>
+<span class="font-mono text-xs uppercase tracking-widest">Architecture.svg</span>
+</div>
+</div>
+<div class="mt-auto flex flex-col gap-5">
+<!-- Tech Stack Tags -->
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-background-dark border border-border-color text-accent font-mono text-xs hover:bg-surface hover:border-accent transition-colors cursor-default">FastAPI</span>
+<span class="px-2 py-1 bg-background-dark border border-border-color text-accent font-mono text-xs hover:bg-surface hover:border-accent transition-colors cursor-default">Python</span>
+<span class="px-2 py-1 bg-background-dark border border-border-color text-accent font-mono text-xs hover:bg-surface hover:border-accent transition-colors cursor-default">SQL</span>
+<span class="px-2 py-1 bg-background-dark border border-border-color text-accent font-mono text-xs hover:bg-surface hover:border-accent transition-colors cursor-default">RBAC</span>
+</div>
+<!-- Action Links -->
+<div class="flex items-center gap-4 border-t border-border-color pt-4">
+<a class="inline-flex items-center gap-1 text-text-primary text-sm font-mono hover:text-primary transition-colors group/link" href="#">
+                                View Repo
+                                <span class="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform" data-icon="arrow_right_alt">arrow_right_alt</span>
+</a>
+<a class="inline-flex items-center gap-1 text-text-muted text-sm font-mono hover:text-text-primary transition-colors group/link" href="#">
+                                Live Demo
+                                <span class="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform" data-icon="open_in_new">open_in_new</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Project Card 2: HR Document Portal -->
+<article class="group bg-surface border border-border-color p-6 transition-all duration-300 hover:border-primary hover:-translate-y-1 flex flex-col h-full relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<header class="mb-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-text-primary text-xl font-bold font-mono group-hover:text-primary transition-colors">HR Document Management Portal</h3>
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary text-sm transition-colors" data-icon="folder_managed">folder_managed</span>
+</div>
+<div class="mb-3">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-mono border border-primary/40 text-primary bg-primary/5 rounded">
+<span class="material-symbols-outlined text-[12px]">emoji_events</span> LEA Hackathon Runner-Up
+</span>
+</div>
+<p class="text-text-muted text-sm leading-relaxed">
+                            SharePoint-based document management system with automated workflow approvals, version control, and permission-based access for sensitive HR records across 5 business units. Runner-Up at the LEA Hackathon; subsequently adopted for production use.
+                        </p>
+</header>
+<!-- Diagram Placeholder -->
+<div class="w-full h-40 bg-background-dark border border-dashed border-border-color mb-6 flex items-center justify-center diagram-pattern relative group/diagram">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover/diagram:opacity-100 transition-opacity"></div>
+<div class="flex flex-col items-center gap-2 text-text-muted z-10">
+<span class="material-symbols-outlined text-2xl" data-icon="account_tree">account_tree</span>
+<span class="font-mono text-xs uppercase tracking-widest">Access_Flow.svg</span>
+</div>
+</div>
+<div class="mt-auto flex flex-col gap-5">
+<!-- Tech Stack Tags -->
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-background-dark border border-border-color text-accent font-mono text-xs hover:bg-surface hover:border-accent transition-colors cursor-default">SharePoint</span>
+<span class="px-2 py-1 bg-background-dark border border-border-color text-accent font-mono text-xs hover:bg-surface hover:border-accent transition-colors cursor-default">Power Automate</span>
+<span class="px-2 py-1 bg-background-dark border border-border-color text-accent font-mono text-xs hover:bg-surface hover:border-accent transition-colors cursor-default">Azure AD</span>
+<span class="px-2 py-1 bg-background-dark border border-border-color text-accent font-mono text-xs hover:bg-surface hover:border-accent transition-colors cursor-default">RBAC</span>
+</div>
+<!-- Action Links -->
+<div class="flex items-center gap-4 border-t border-border-color pt-4">
+<a class="inline-flex items-center gap-1 text-text-primary text-sm font-mono hover:text-primary transition-colors group/link" href="#">
+                                Read Documentation
+                                <span class="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform" data-icon="arrow_right_alt">arrow_right_alt</span>
+</a>
+</div>
+</div>
+</article>
+</div>
+<!-- Output Footer -->
+<div class="mt-8 border-t border-border-color pt-4 flex items-center gap-2 text-text-muted text-sm font-mono">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+<span>2 directories listed. Ready.</span>
+</div>
+</div>
+</main>
+<!-- Fixed Status Bar -->
+<footer class="fixed bottom-0 w-full h-8 bg-surface border-t border-border-color flex items-center justify-between px-4 font-mono text-xs text-text-muted z-50">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-primary rounded-full"></span> SYSTEM: ONLINE</span>
+<span class="hidden sm:inline">| UPTIME: 99.9%</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden sm:inline">LOC: GABORONE/REMOTE</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="lock">lock</span>
+                SECURE
+            </span>
+</div>
+</footer>
+<script>
+    (function matrixRain() {
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+        const BG    = 'rgba(13, 17, 23, 0.05)';
+        const GREEN  = '#06f943';
+        const BRIGHT = '#ccffcc';
+        const FS = 14;
+        const CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';
+        let cols, drops;
+        function init() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+            cols  = Math.floor(canvas.width / FS);
+            drops = Array.from({length: cols}, () => Math.floor(Math.random() * -60));
+        }
+        function draw() {
+            ctx.fillStyle = BG;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = FS + 'px monospace';
+            for (let i = 0; i < cols; i++) {
+                const char = CHARS[Math.floor(Math.random() * CHARS.length)];
+                ctx.fillStyle = Math.random() > 0.95 ? BRIGHT : GREEN;
+                ctx.fillText(char, i * FS, drops[i] * FS);
+                if (drops[i] * FS > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        init();
+        setInterval(draw, 50);
+        window.addEventListener('resize', init);
+    })();
+</script>
+</body></html>

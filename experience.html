@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Experience | Kopo@SysAdmin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#06f943",
+              "background-light": "#f5f8f6",
+              "background-dark": "#0f2314",
+              "surface-dark": "#162e1c",
+              "border-dark": "#273a2c",
+              "text-muted": "#8a9e8e",
+              "accent-blue": "#58A6FF"
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.125rem",
+              "lg": "0.25rem",
+              "xl": "0.5rem",
+              "full": "0.75rem"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        #matrix-rain {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen antialiased selection:bg-primary/30 selection:text-primary">
+<canvas id="matrix-rain"></canvas>
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<!-- TopNavBar Component -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-border-dark px-0 py-3 mb-8">
+<div class="flex items-center gap-4 text-slate-100">
+<div class="size-4 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em]"><a href="index.html">Kopo@SysAdmin:~$</a></h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-primary text-sm font-medium leading-normal hover:text-white transition-colors" href="experience.html">[Experience]</a>
+<a class="text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors" href="project.html">[Projects]</a>
+<a class="text-slate-400 text-sm font-medium leading-normal hover:text-primary transition-colors" href="blog.html">[Blog]</a>
+</div>
+</div>
+</header>
+<div class="flex flex-wrap justify-between gap-3 pb-8">
+<p class="text-slate-100 tracking-light text-2xl md:text-[32px] font-bold leading-tight min-w-72">
+<span class="text-primary">&gt;</span> cd ./experience
+                        </p>
+</div>
+<!-- Main Content Layout: Two Columns -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 pb-20">
+<!-- Left Column: Skill Matrices -->
+<div class="lg:col-span-4 flex flex-col gap-10">
+<!-- Application Support & ERP -->
+<div>
+<h3 class="text-slate-100 text-lg font-semibold mb-4 border-b border-border-dark pb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">terminal</span>
+                                    Application Support &amp; ERP
+                                </h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Sage 50c Pastel</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">SAP Fundamentals</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Microsoft 365 Admin</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Exchange Online</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">FastAPI / SQL</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Power BI</span>
+</div>
+</div>
+<!-- Infrastructure & Automation -->
+<div>
+<h3 class="text-slate-100 text-lg font-semibold mb-4 border-b border-border-dark pb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">router</span>
+                                    Infrastructure &amp; Automation
+                                </h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Windows Server 2019</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Active Directory</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Group Policy / RBAC</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">DNS / DHCP</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">AWS Cloud Practitioner</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">PowerShell</span>
+</div>
+</div>
+<!-- ITSM & Process -->
+<div>
+<h3 class="text-slate-100 text-lg font-semibold mb-4 border-b border-border-dark pb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">support_agent</span>
+                                    ITSM &amp; Process
+                                </h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">ITIL 4 Foundation</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">SLA Monitoring</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Incident Management</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">Root Cause Analysis</span>
+<span class="px-3 py-1 text-[13px] text-accent-blue bg-transparent border border-border-dark rounded hover:bg-surface-dark hover:border-accent-blue transition-all cursor-default">UAT &amp; Documentation</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Timeline -->
+<div class="lg:col-span-8 relative">
+<!-- Timeline Vertical Line -->
+<div class="absolute left-[15px] md:left-[23px] top-2 bottom-0 w-px bg-border-dark"></div>
+<div class="flex flex-col gap-12">
+<!-- Role: IT Officer -->
+<div class="relative pl-10 md:pl-16">
+<div class="absolute left-0 md:left-2 top-1.5 size-8 rounded-full bg-surface-dark border border-border-dark flex items-center justify-center z-10">
+<div class="size-2 rounded-full bg-primary"></div>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2 gap-2">
+<h4 class="text-xl font-bold text-slate-100">IT Officer</h4>
+<span class="text-[13px] text-text-muted font-mono tracking-wider">SEP 2024 — PRESENT</span>
+</div>
+<div class="text-primary text-sm mb-4">Leading Edge Markets, Gaborone</div>
+<ul class="space-y-3 text-slate-300 text-[15px] leading-relaxed">
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Provide first and second-line application support to 30+ end-users, maintaining system availability across all business-critical platforms.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Administer Microsoft 365 suite (Exchange Online, Teams, OneDrive) and manage Windows Server 2019 with Active Directory, RBAC, and Group Policy enforcement.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Maintain 150+ asset inventory and SOPs; use SQL-based systems for incident tracking, SLA performance metrics, and monthly management reporting.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Coordinate with external vendors (ISP, PBX, hardware) to resolve service disruptions and maintain business continuity SLAs.</span>
+</li>
+</ul>
+</div>
+<!-- Role: Implementation Consultant -->
+<div class="relative pl-10 md:pl-16">
+<div class="absolute left-0 md:left-2 top-1.5 size-8 rounded-full bg-surface-dark border border-border-dark flex items-center justify-center z-10">
+<div class="size-2 rounded-full bg-text-muted"></div>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2 gap-2">
+<h4 class="text-xl font-bold text-slate-100">Implementation Consultant</h4>
+<span class="text-[13px] text-text-muted font-mono tracking-wider">MAR 2020 — FEB 2022</span>
+</div>
+<div class="text-primary text-sm mb-4">Businesoft, Gaborone</div>
+<ul class="space-y-3 text-slate-300 text-[15px] leading-relaxed">
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Delivered first and second-line Sage 50c Pastel support across 20+ client organisations, resolving issues across accounting, inventory, payroll, and reporting modules.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Configured Sage 50c end-to-end: company setup, chart of accounts, VAT rules, multi-user access control — tailored to each client's business process requirements.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Trained 80+ users across client sites; reduced post-go-live support tickets by 40%. Managed data migrations from Excel/CSV with full validation and reconciliation sign-off.</span>
+</li>
+</ul>
+</div>
+<!-- Role: IT Technician -->
+<div class="relative pl-10 md:pl-16">
+<div class="absolute left-0 md:left-2 top-1.5 size-8 rounded-full bg-surface-dark border border-border-dark flex items-center justify-center z-10">
+<div class="size-2 rounded-full bg-text-muted"></div>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2 gap-2">
+<h4 class="text-xl font-bold text-slate-100">IT Technician</h4>
+<span class="text-[13px] text-text-muted font-mono tracking-wider">FEB 2018 — JUN 2018</span>
+</div>
+<div class="text-primary text-sm mb-4">Information Technology Integrators (ITI), Gaborone</div>
+<ul class="space-y-3 text-slate-300 text-[15px] leading-relaxed">
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Provided technical support for client environments including application setup, network configuration, and user access administration.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="text-primary font-bold mt-0.5">&gt;</span>
+<span>Troubleshot and resolved hardware and software incidents, ensuring prompt service restoration with documented resolution records.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Fixed Status Bar -->
+<div class="fixed bottom-0 left-0 w-full h-8 bg-surface-dark border-t border-border-dark flex items-center justify-between px-4 text-xs font-mono text-text-muted z-50">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-2"><div class="size-1.5 rounded-full bg-primary animate-pulse"></div> SYSTEM: ONLINE</span>
+<span class="hidden sm:inline border-l border-border-dark pl-4">UPTIME: 99.9%</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden sm:inline">LOC: GABORONE/REMOTE</span>
+<span class="text-slate-400">~/experience</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+    (function matrixRain() {
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+        const BG    = 'rgba(13, 17, 23, 0.05)';
+        const GREEN  = '#06f943';
+        const BRIGHT = '#ccffcc';
+        const FS = 14;
+        const CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';
+        let cols, drops;
+        function init() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+            cols  = Math.floor(canvas.width / FS);
+            drops = Array.from({length: cols}, () => Math.floor(Math.random() * -60));
+        }
+        function draw() {
+            ctx.fillStyle = BG;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = FS + 'px monospace';
+            for (let i = 0; i < cols; i++) {
+                const char = CHARS[Math.floor(Math.random() * CHARS.length)];
+                ctx.fillStyle = Math.random() > 0.95 ? BRIGHT : GREEN;
+                ctx.fillText(char, i * FS, drops[i] * FS);
+                if (drops[i] * FS > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        init();
+        setInterval(draw, 50);
+        window.addEventListener('resize', init);
+    })();
+</script>
+</body></html>

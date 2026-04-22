@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SLA Monitoring with SQL: Building Monthly IT Reports | Kopo@SysAdmin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#06f943","background-dark":"#0D1117","surface":"#161B22","text-main":"#C9D1D9","muted":"#8B949E","border-color":"#30363D","accent":"#58A6FF"},fontFamily:{"display":["Space Grotesk","sans-serif"],"mono":["Fira Code","monospace"],"sans":["Outfit","sans-serif"]}}}}
+    </script>
+<style>
+        body{background-color:#0D1117;color:#C9D1D9;font-family:'Outfit',sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased;}
+        h1,h2,h3{font-family:'Fira Code',monospace;font-weight:600;color:#E6EDF3;margin-top:2em;margin-bottom:0.75em;}
+        h1{font-size:2rem;line-height:1.25;margin-top:0;}
+        h2{font-size:1.35rem;border-bottom:1px solid #30363D;padding-bottom:0.3em;}
+        h3{font-size:1.1rem;color:#06f943;}
+        p{margin-bottom:1.5em;font-weight:300;}
+        a{color:#06f943;text-decoration:none;transition:all 0.2s;}
+        a:hover{text-shadow:0 0 8px rgba(6,249,67,0.35);text-decoration:underline;}
+        code{font-family:'Fira Code',monospace;font-size:0.83em;background-color:rgba(110,118,129,0.18);padding:0.2em 0.45em;border-radius:3px;color:#a5d6ff;}
+        pre{background-color:#161B22;border:1px solid #30363D;padding:18px 20px;overflow-x:auto;margin-bottom:1.5em;}
+        pre code{background:transparent;padding:0;font-size:0.84em;color:#C9D1D9;}
+        .kw{color:#FF7B72;}.str{color:#A5D6FF;}.cmt{color:#8B949E;font-style:italic;}.fn{color:#D2A8FF;}.num{color:#79C0FF;}
+        ul,ol{margin-bottom:1.5em;padding-left:1.5em;}
+        ul li{list-style:none;position:relative;margin-bottom:0.55em;}
+        ul li::before{content:">";position:absolute;left:-1.4em;color:#06f943;font-family:'Fira Code',monospace;font-weight:bold;}
+        ol li{margin-bottom:0.55em;padding-left:0.4em;}
+        blockquote{border-left:3px solid #06f943;padding:0.5em 1em;margin:1.5em 0;background:rgba(6,249,67,0.04);color:#8B949E;font-style:italic;}
+        .callout{border:1px solid #30363D;background:#161B22;padding:1em 1.25em;margin-bottom:1.5em;border-left:3px solid #58A6FF;}
+        .callout-ok{border-left-color:#06f943;}
+        .tag{display:inline-block;font-family:'Fira Code',monospace;font-size:0.75rem;padding:0.15em 0.6em;border:1px solid;margin-right:0.3em;}
+        #matrix-rain{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.10;pointer-events:none;}
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<canvas id="matrix-rain"></canvas>
+<header class="sticky top-0 z-50 w-full bg-[#0D1117]/90 backdrop-blur-sm border-b border-[#30363D]">
+<div class="max-w-[720px] mx-auto px-6 py-4 flex items-center justify-between">
+<a class="font-mono text-sm text-[#8B949E] hover:text-primary transition-colors flex items-center gap-2 group" href="blog.html"><span class="text-primary group-hover:text-white">&lt;</span> cd ../blog</a>
+<div class="text-sm font-mono text-[#8B949E] hidden sm:block"><span class="text-primary">Kopo@SysAdmin</span>:~/blog$</div>
+</div>
+</header>
+
+<main class="flex-1 w-full max-w-[720px] mx-auto px-6 py-12 md:py-20 pb-24">
+<header class="mb-12">
+<div class="font-mono text-xs text-[#8B949E] mb-4"><span class="text-primary">cat</span> sla_monitoring_sql_reports.md</div>
+<h1>SLA Monitoring with SQL: Building Monthly IT Reports</h1>
+<div class="flex flex-wrap items-center gap-4 text-sm font-mono text-[#8B949E] mt-5 border-t border-[#30363D] pt-5">
+<span>2025-02-07</span><span class="text-[#30363D]">|</span><span>7 min read</span><span class="text-[#30363D]">|</span>
+<span class="tag" style="color:#58A6FF;border-color:rgba(88,166,255,0.3);background:rgba(88,166,255,0.05)">tutorial</span>
+<span class="tag" style="color:#06f943;border-color:rgba(6,249,67,0.3);background:rgba(6,249,67,0.05)">sql</span>
+<span class="tag" style="color:#8B949E;border-color:rgba(139,148,158,0.3)">itsm</span>
+</div>
+</header>
+
+<article>
+<p>Every IT department makes promises — response within 4 hours, resolution within 8, no repeat incidents from the same root cause within 30 days. The problem isn't making those commitments; it's knowing whether you're keeping them. At Leading Edge Markets, I built a SQL-based reporting layer on top of our incident and asset tracking data that produces a monthly management report automatically. This post covers the queries and views that make it work.</p>
+
+<h2>1. The Data You Need First</h2>
+<p>Before you can measure SLA, you need structured incident data with at minimum: a ticket ID, a category, opened and closed timestamps, an assigned technician, and a priority level. If your system dumps this to a SQL database (or if you've built your own like the EMS), you're already in a good position.</p>
+<pre><code><span class="cmt">-- Minimum schema for SLA reporting</span>
+<span class="kw">CREATE TABLE</span> incidents (
+    id            <span class="fn">INTEGER</span> <span class="kw">PRIMARY KEY</span>,
+    title         <span class="fn">TEXT</span>,
+    category      <span class="fn">TEXT</span>,          <span class="cmt">-- Hardware, Software, Network, Access</span>
+    priority      <span class="fn">TEXT</span>,          <span class="cmt">-- P1, P2, P3, P4</span>
+    opened_at     <span class="fn">DATETIME</span>,
+    first_response <span class="fn">DATETIME</span>,    <span class="cmt">-- when technician first replied</span>
+    resolved_at   <span class="fn">DATETIME</span>,
+    technician    <span class="fn">TEXT</span>,
+    status        <span class="fn">TEXT</span>           <span class="cmt">-- Open, In Progress, Resolved, Closed</span>
+);</code></pre>
+
+<h2>2. Core SLA Views</h2>
+<h3>Response time compliance</h3>
+<pre><code><span class="cmt">-- SLA targets (minutes): P1=60, P2=240, P3=480, P4=1440</span>
+<span class="kw">CREATE VIEW</span> v_response_compliance <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+    id,
+    priority,
+    ROUND((<span class="fn">JULIANDAY</span>(first_response) - <span class="fn">JULIANDAY</span>(opened_at)) * <span class="num">1440</span>, <span class="num">1</span>) <span class="kw">AS</span> response_mins,
+    <span class="kw">CASE</span> priority
+        <span class="kw">WHEN</span> <span class="str">'P1'</span> <span class="kw">THEN</span> <span class="kw">CASE WHEN</span> response_mins &lt;= <span class="num">60</span>   <span class="kw">THEN</span> <span class="str">'Met'</span> <span class="kw">ELSE</span> <span class="str">'Breached'</span> <span class="kw">END</span>
+        <span class="kw">WHEN</span> <span class="str">'P2'</span> <span class="kw">THEN</span> <span class="kw">CASE WHEN</span> response_mins &lt;= <span class="num">240</span>  <span class="kw">THEN</span> <span class="str">'Met'</span> <span class="kw">ELSE</span> <span class="str">'Breached'</span> <span class="kw">END</span>
+        <span class="kw">WHEN</span> <span class="str">'P3'</span> <span class="kw">THEN</span> <span class="kw">CASE WHEN</span> response_mins &lt;= <span class="num">480</span>  <span class="kw">THEN</span> <span class="str">'Met'</span> <span class="kw">ELSE</span> <span class="str">'Breached'</span> <span class="kw">END</span>
+        <span class="kw">WHEN</span> <span class="str">'P4'</span> <span class="kw">THEN</span> <span class="kw">CASE WHEN</span> response_mins &lt;= <span class="num">1440</span> <span class="kw">THEN</span> <span class="str">'Met'</span> <span class="kw">ELSE</span> <span class="str">'Breached'</span> <span class="kw">END</span>
+    <span class="kw">END AS</span> response_sla
+<span class="kw">FROM</span> incidents
+<span class="kw">WHERE</span> first_response <span class="kw">IS NOT NULL</span>;</code></pre>
+
+<h3>Monthly summary report query</h3>
+<pre><code><span class="kw">SELECT</span>
+    <span class="fn">STRFTIME</span>(<span class="str">'%Y-%m'</span>, opened_at)                          <span class="kw">AS</span> month,
+    <span class="fn">COUNT</span>(*)                                               <span class="kw">AS</span> total_tickets,
+    <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> status = <span class="str">'Resolved'</span> <span class="kw">THEN</span> <span class="num">1</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>)  <span class="kw">AS</span> resolved,
+    <span class="fn">ROUND</span>(
+        <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> response_sla = <span class="str">'Met'</span> <span class="kw">THEN</span> <span class="num">1.0</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END</span>) /
+        <span class="fn">COUNT</span>(*) * <span class="num">100</span>, <span class="num">1</span>
+    )                                                      <span class="kw">AS</span> response_sla_pct,
+    category,
+    technician
+<span class="kw">FROM</span> incidents
+<span class="kw">JOIN</span> v_response_compliance <span class="kw">USING</span> (id)
+<span class="kw">WHERE</span> opened_at >= <span class="fn">DATE</span>(<span class="str">'now'</span>, <span class="str">'-12 months'</span>)
+<span class="kw">GROUP BY</span> month, category, technician
+<span class="kw">ORDER BY</span> month <span class="kw">DESC</span>;</code></pre>
+
+<h2>3. The Repeat Incident Flag</h2>
+<p>One metric I added after a pattern became obvious: incidents from the same user on the same category within 30 days. A ticket resolved and then re-opened by the same person for the same thing usually means the resolution was superficial.</p>
+<pre><code><span class="kw">SELECT</span>
+    a.id           <span class="kw">AS</span> original_ticket,
+    b.id           <span class="kw">AS</span> repeat_ticket,
+    a.technician,
+    a.category,
+    <span class="fn">ROUND</span>((<span class="fn">JULIANDAY</span>(b.opened_at) - <span class="fn">JULIANDAY</span>(a.resolved_at)), <span class="num">1</span>) <span class="kw">AS</span> days_between
+<span class="kw">FROM</span> incidents a
+<span class="kw">JOIN</span> incidents b
+    <span class="kw">ON</span>  a.reported_by = b.reported_by
+    <span class="kw">AND</span> a.category    = b.category
+    <span class="kw">AND</span> b.opened_at   > a.resolved_at
+    <span class="kw">AND</span> (<span class="fn">JULIANDAY</span>(b.opened_at) - <span class="fn">JULIANDAY</span>(a.resolved_at)) &lt;= <span class="num">30</span>
+<span class="kw">ORDER BY</span> days_between;</code></pre>
+
+<div class="callout callout-ok">
+<strong>Real outcome:</strong> In the first quarter of using this view, we identified 3 technicians whose resolutions had high repeat rates for a specific software category. A targeted knowledge-sharing session reduced repeat incidents for that category by 60% over the following quarter.
+</div>
+
+<h2>4. Making the Report Automatic</h2>
+<p>The final step was scheduling the report export. A Python script runs on the first of each month, queries the views, formats the output as an Excel file, and emails it to management automatically — no manual intervention needed.</p>
+<pre><code><span class="cmt"># monthly_report.py — scheduled via Task Scheduler, 1st of month 08:00</span>
+<span class="kw">import</span> sqlite3, pandas <span class="kw">as</span> pd
+<span class="kw">from</span> datetime <span class="kw">import</span> date
+<span class="kw">import</span> smtplib
+<span class="kw">from</span> email.mime.multipart <span class="kw">import</span> MIMEMultipart
+
+conn   = sqlite3.<span class="fn">connect</span>(<span class="str">"incidents.db"</span>)
+df     = pd.<span class="fn">read_sql</span>(MONTHLY_SUMMARY_QUERY, conn)
+output = <span class="str">f"IT_Report_{date.today().strftime('%Y-%m')}.xlsx"</span>
+df.<span class="fn">to_excel</span>(output, index=<span class="kw">False</span>)
+<span class="fn">send_email</span>(to=<span class="str">"management@company.com"</span>, attachment=output)</code></pre>
+
+<p>Questions — <a href="mailto:kkeitumetse09@gmail.com">kkeitumetse09@gmail.com</a>.</p>
+</article>
+
+<footer class="mt-16 border-t border-[#30363D] pt-8 pb-12">
+<div class="flex items-center justify-between font-mono text-sm text-[#8B949E]">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">terminal</span> EOF</span>
+<a class="hover:text-primary transition-colors" href="#top">return to top ^</a>
+</div>
+</footer>
+</main>
+
+<div class="fixed bottom-0 left-0 w-full h-8 bg-[#161B22] border-t border-[#30363D] flex items-center justify-between px-4 text-xs font-mono text-[#8B949E] z-50">
+<div class="flex items-center gap-4"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> SYSTEM: ONLINE</span></div>
+<div><span class="text-primary">~/blog/sla_monitoring_sql_reports.md</span></div>
+</div>
+<script>(function matrixRain(){const canvas=document.getElementById('matrix-rain'),ctx=canvas.getContext('2d'),BG='rgba(13,17,23,0.05)',GREEN='#06f943',BRIGHT='#ccffcc',FS=14,CHARS='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';let cols,drops;function init(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/FS);drops=Array.from({length:cols},()=>Math.floor(Math.random()*-60));}function draw(){ctx.fillStyle=BG;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font=FS+'px monospace';for(let i=0;i<cols;i++){const char=CHARS[Math.floor(Math.random()*CHARS.length)];ctx.fillStyle=Math.random()>0.95?BRIGHT:GREEN;ctx.fillText(char,i*FS,drops[i]*FS);if(drops[i]*FS>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++;}}init();setInterval(draw,50);window.addEventListener('resize',init);})();</script>
+</body></html>

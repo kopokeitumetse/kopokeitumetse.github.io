@@ -4,8 +4,9 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Kopo Keitumetse | Systems Administrator</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
         tailwind.config = {
@@ -55,7 +56,7 @@
             background-color: #0D1117;
             color: #C9D1D9;
         }
-
+        
         .typewriter-text {
             overflow: hidden;
             white-space: nowrap;
@@ -73,11 +74,21 @@
             from, to { border-color: transparent }
             50% { border-color: #06f943; }
         }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0D1117; }
-        ::-webkit-scrollbar-thumb { background: #30363D; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #8B949E; }
+        
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0D1117;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #30363D;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B949E;
+        }
 
         #matrix-rain {
             position: fixed;
@@ -116,9 +127,6 @@
                     Blog
                     <span class="text-primary opacity-0 group-hover:opacity-100 transition-opacity absolute -right-2">]</span>
 </a>
-<a class="flex items-center gap-1 px-3 py-1 bg-primary text-background-dark font-mono font-bold text-xs hover:bg-primary/90 transition-colors" href="Kopo_Keitumetse_CV.pdf" download="Kopo_Keitumetse_CV.pdf">
-<span class="material-symbols-outlined" style="font-size:14px;line-height:1">download</span> CV
-</a>
 </nav>
 </div>
 </header>
@@ -153,17 +161,13 @@
 <div class="mb-6 text-text-muted animate-[fadeIn_0.5s_ease-in_3s_both]">
 <p>[OK] ERP support &amp; Microsoft 365 admin across enterprise.</p>
 <p>[OK] Automating workflows via FastAPI &amp; SQL-based systems.</p>
-<p></p>
+<p>[OK] Pursuing AWS Solutions Architect Associate (SAA-C03).</p>
 </div>
 <div class="animate-[fadeIn_0.5s_ease-in_3.5s_both]">
 <span class="text-primary">Kopo@SysAdmin</span><span class="text-white">:</span><span class="text-accent">~</span><span class="text-white">$</span>
 <span class="animate-blink inline-block w-2 h-4 bg-primary ml-1 align-middle"></span>
 </div>
 </div>
-</div>
-<div class="mt-6 flex gap-3 flex-wrap">
-<a class="flex items-center gap-2 px-4 py-2 bg-primary text-background-dark font-mono font-bold text-sm hover:bg-primary/90 transition-colors" href="Kopo_Keitumetse_CV.pdf" download="Kopo_Keitumetse_CV.pdf"><span class="material-symbols-outlined" style="font-size:16px;line-height:1">download</span> Download CV</a>
-<a class="flex items-center gap-2 px-4 py-2 border border-border-dark text-text-muted font-mono text-sm hover:text-primary hover:border-primary transition-colors" href="mailto:kkeitumetse09@gmail.com"><span class="material-symbols-outlined" style="font-size:16px;line-height:1">mail</span> Contact</a>
 </div>
 </div>
 <!-- Right Panel: Scrolling Content -->
@@ -185,7 +189,7 @@
 <span class="px-2 py-1 text-xs border border-border-dark text-accent rounded bg-background-dark">Python</span>
 <span class="px-2 py-1 text-xs border border-border-dark text-accent rounded bg-background-dark">SQL</span>
 </div>
-<a class="inline-flex items-center gap-2 text-sm text-text-main hover:text-primary transition-colors font-mono" href="project.html">
+<a class="inline-flex items-center gap-2 text-sm text-text-main hover:text-primary transition-colors font-mono" href="#">
                             View Details <span class="material-symbols-outlined text-sm">arrow_forward</span>
 </a>
 </div>
@@ -199,7 +203,7 @@
 <span class="px-2 py-1 text-xs border border-border-dark text-accent rounded bg-background-dark">Azure AD</span>
 <span class="px-2 py-1 text-xs border border-border-dark text-accent rounded bg-background-dark">PowerShell</span>
 </div>
-<a class="inline-flex items-center gap-2 text-sm text-text-main hover:text-primary transition-colors font-mono" href="project.html">
+<a class="inline-flex items-center gap-2 text-sm text-text-main hover:text-primary transition-colors font-mono" href="#">
                             View Details <span class="material-symbols-outlined text-sm">arrow_forward</span>
 </a>
 </div>
@@ -218,7 +222,8 @@
 <div class="text-right w-24">Date</div>
 </div>
 <div class="divide-y divide-border-dark/50 border-dashed">
-<a class="grid grid-cols-[1fr_auto_auto] gap-4 p-4 hover:bg-background-dark group transition-colors items-center" href="blog_post.html">
+<!-- Log Item -->
+<a class="grid grid-cols-[1fr_auto_auto] gap-4 p-4 hover:bg-background-dark group transition-colors items-center" href="blog.html">
 <div class="flex items-center gap-3">
 <span class="material-symbols-outlined text-text-muted group-hover:text-primary text-sm">description</span>
 <span class="text-sm text-text-main group-hover:text-primary transition-colors truncate">sage_migration_data_validation_checklist.md</span>
@@ -226,18 +231,20 @@
 <div class="text-xs font-mono text-text-muted text-right">5.1kb</div>
 <div class="text-xs font-mono text-text-muted text-right w-24">2024-11-18</div>
 </a>
-<a class="grid grid-cols-[1fr_auto_auto] gap-4 p-4 hover:bg-background-dark group transition-colors items-center" href="blog_post_exchange.html">
+<!-- Log Item -->
+<a class="grid grid-cols-[1fr_auto_auto] gap-4 p-4 hover:bg-background-dark group transition-colors items-center" href="blog.html">
 <div class="flex items-center gap-3">
 <span class="material-symbols-outlined text-text-muted group-hover:text-primary text-sm">description</span>
-<span class="text-sm text-text-main group-hover:text-primary transition-colors truncate">sla_monitoring_sql_monthly_reports.md</span>
+<span class="text-sm text-text-main group-hover:text-primary transition-colors truncate">postmortem_exchange_online_routing_failure.md</span>
 </div>
 <div class="text-xs font-mono text-text-muted text-right">6.3kb</div>
 <div class="text-xs font-mono text-text-muted text-right w-24">2025-02-07</div>
 </a>
-<a class="grid grid-cols-[1fr_auto_auto] gap-4 p-4 hover:bg-background-dark group transition-colors items-center" href="blog_post_ad_automation.html">
+<!-- Log Item -->
+<a class="grid grid-cols-[1fr_auto_auto] gap-4 p-4 hover:bg-background-dark group transition-colors items-center" href="blog.html">
 <div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-text-muted group-hover:text-primary text-sm">description</span>
-<span class="text-sm text-text-main group-hover:text-primary transition-colors truncate">erp_user_training_sage50c.md</span>
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary text-sm">code</span>
+<span class="text-sm text-text-main group-hover:text-primary transition-colors truncate">ad_user_lifecycle_automation.ps1</span>
 </div>
 <div class="text-xs font-mono text-text-muted text-right">3.2kb</div>
 <div class="text-xs font-mono text-text-muted text-right w-24">2025-01-14</div>
@@ -273,8 +280,8 @@
     (function matrixRain() {
         const canvas = document.getElementById('matrix-rain');
         const ctx = canvas.getContext('2d');
-        const BG    = 'rgba(13, 17, 23, 0.05)';
-        const GREEN  = '#06f943';
+        const BG   = 'rgba(13, 17, 23, 0.05)';
+        const GREEN = '#06f943';
         const BRIGHT = '#ccffcc';
         const FS = 14;
         const CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';

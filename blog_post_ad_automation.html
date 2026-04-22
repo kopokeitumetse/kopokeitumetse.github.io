@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Training 80+ Users on Sage 50c: What Actually Works | Kopo@SysAdmin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#06f943","background-dark":"#0D1117","surface":"#161B22","text-main":"#C9D1D9","muted":"#8B949E","border-color":"#30363D","accent":"#58A6FF"},fontFamily:{"display":["Space Grotesk","sans-serif"],"mono":["Fira Code","monospace"],"sans":["Outfit","sans-serif"]}}}}
+    </script>
+<style>
+        body{background-color:#0D1117;color:#C9D1D9;font-family:'Outfit',sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased;}
+        h1,h2,h3{font-family:'Fira Code',monospace;font-weight:600;color:#E6EDF3;margin-top:2em;margin-bottom:0.75em;}
+        h1{font-size:2rem;line-height:1.25;margin-top:0;}
+        h2{font-size:1.35rem;border-bottom:1px solid #30363D;padding-bottom:0.3em;}
+        h3{font-size:1.1rem;color:#06f943;}
+        p{margin-bottom:1.5em;font-weight:300;}
+        a{color:#06f943;text-decoration:none;transition:all 0.2s;}
+        a:hover{text-shadow:0 0 8px rgba(6,249,67,0.35);text-decoration:underline;}
+        code{font-family:'Fira Code',monospace;font-size:0.83em;background-color:rgba(110,118,129,0.18);padding:0.2em 0.45em;border-radius:3px;color:#a5d6ff;}
+        ul,ol{margin-bottom:1.5em;padding-left:1.5em;}
+        ul li{list-style:none;position:relative;margin-bottom:0.55em;}
+        ul li::before{content:">";position:absolute;left:-1.4em;color:#06f943;font-family:'Fira Code',monospace;font-weight:bold;}
+        ol li{margin-bottom:0.55em;padding-left:0.4em;}
+        blockquote{border-left:3px solid #06f943;padding:0.5em 1em;margin:1.5em 0;background:rgba(6,249,67,0.04);color:#8B949E;font-style:italic;}
+        .callout{border:1px solid #30363D;background:#161B22;padding:1em 1.25em;margin-bottom:1.5em;border-left:3px solid #58A6FF;}
+        .callout-ok{border-left-color:#06f943;}.callout-warn{border-left-color:#e3a826;}
+        .tag{display:inline-block;font-family:'Fira Code',monospace;font-size:0.75rem;padding:0.15em 0.6em;border:1px solid;margin-right:0.3em;}
+        #matrix-rain{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;opacity:0.10;pointer-events:none;}
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<canvas id="matrix-rain"></canvas>
+<header class="sticky top-0 z-50 w-full bg-[#0D1117]/90 backdrop-blur-sm border-b border-[#30363D]">
+<div class="max-w-[720px] mx-auto px-6 py-4 flex items-center justify-between">
+<a class="font-mono text-sm text-[#8B949E] hover:text-primary transition-colors flex items-center gap-2 group" href="blog.html"><span class="text-primary group-hover:text-white">&lt;</span> cd ../blog</a>
+<div class="text-sm font-mono text-[#8B949E] hidden sm:block"><span class="text-primary">Kopo@SysAdmin</span>:~/blog$</div>
+</div>
+</header>
+
+<main class="flex-1 w-full max-w-[720px] mx-auto px-6 py-12 md:py-20 pb-24">
+<header class="mb-12">
+<div class="font-mono text-xs text-[#8B949E] mb-4"><span class="text-primary">cat</span> erp_user_training_what_works.md</div>
+<h1>Training 80+ Users on Sage 50c: What Actually Works</h1>
+<div class="flex flex-wrap items-center gap-4 text-sm font-mono text-[#8B949E] mt-5 border-t border-[#30363D] pt-5">
+<span>2025-01-14</span><span class="text-[#30363D]">|</span><span>6 min read</span><span class="text-[#30363D]">|</span>
+<span class="tag" style="color:#58A6FF;border-color:rgba(88,166,255,0.3);background:rgba(88,166,255,0.05)">tutorial</span>
+<span class="tag" style="color:#06f943;border-color:rgba(6,249,67,0.3);background:rgba(6,249,67,0.05)">erp</span>
+<span class="tag" style="color:#8B949E;border-color:rgba(139,148,158,0.3)">training</span>
+</div>
+</header>
+
+<article>
+<p>Across 20+ Sage 50c Pastel implementations at Businesoft, training was the phase that most consultants treated as an afterthought — something you do on the last day before go-live, covering every module in four hours, handing over a manual, and calling it done. The evidence was in the support queue: clients who received proper training called back half as often in the first month. Clients who received the four-hour overview became the majority of post-go-live support traffic.</p>
+
+<p>After running training for 80+ users across different client organisations, here is what consistently made the difference.</p>
+
+<h2>1. Train by Role, Not by Module</h2>
+<p>The default Sage training approach walks through every module in sequence: setup, then GL, then AP, then AR, then inventory. The problem is that a creditors clerk does not need to know how inventory modules work. A payroll admin does not need to navigate the debtors ledger.</p>
+
+<p>Instead, I build a role matrix before the first training session and run three or four separate sessions:</p>
+
+<ul>
+<li><strong>Finance / Creditors:</strong> Chart of accounts navigation, supplier invoices, payments, age analysis, reconciliation</li>
+<li><strong>Debtors / Invoicing:</strong> Customer accounts, quotes → invoices, receipts, statements</li>
+<li><strong>Inventory:</strong> Item creation, GRV process, stock adjustments, reporting</li>
+<li><strong>Management / Reporting:</strong> Financial statements, custom reports, user access overview</li>
+</ul>
+
+<p>Each session is 90 minutes maximum. People can absorb a focused 90-minute session on the work they actually do. They cannot absorb a six-hour overview of a system they partially use.</p>
+
+<div class="callout callout-warn">
+<strong>Common mistake:</strong> Training everyone together because "it's more efficient." It isn't. The creditors clerk switches off during the inventory session, and the stock controller switches off during the AP session. You end up with everyone being half-trained on everything.
+</div>
+
+<h2>2. Use Real Client Data in Training</h2>
+<p>Every training session runs on the actual company data — the migrated chart of accounts, the real supplier list, the actual inventory items. Not a demo company, not sample data.</p>
+
+<p>The reason is simple: when a user sees "ABC Suppliers" in the system, they know what it is. When they see "Demo Supplier Ltd", they're mentally translating everything you show them back to their actual context. Real data removes that friction and makes the training immediately applicable.</p>
+
+<p>The risk — that users make mistakes in the live system during training — is managed by running training on a copy of the company data, not the production company, until go-live.</p>
+
+<h2>3. Teach the Recovery, Not Just the Process</h2>
+<p>Most ERP training teaches the happy path: here's how to create an invoice. What it doesn't teach is what to do when something goes wrong — and things always go wrong in the first two weeks.</p>
+
+<p>For every core process I train, I also train the recovery:</p>
+
+<ul>
+<li>How to create an invoice <em>and</em> how to reverse a posted invoice</li>
+<li>How to allocate a payment <em>and</em> how to unallocate if it was applied to the wrong invoice</li>
+<li>How to process a GRV <em>and</em> how to handle a quantity discrepancy after posting</li>
+</ul>
+
+<p>This sounds obvious, but it's the recovery knowledge that determines whether users call support at 09:00 on day three of go-live or handle it themselves.</p>
+
+<h2>4. The 30-Day Support Ticket Metric</h2>
+<p>After each implementation I tracked support tickets from that client for the first 30 days. The pattern was consistent: clients with proper role-based training averaged 3–5 tickets in the first 30 days. Clients with a single full-group overview averaged 12–18.</p>
+
+<blockquote>"A 40% reduction in post-go-live support tickets is not a training success metric — it's a business metric. Fewer tickets means less implementation team time and faster client independence."</blockquote>
+
+<p>The 40% figure in my CV is a conservative average across the implementations I tracked. Some clients with particularly engaged management teams had reductions closer to 60%. The outlier on the other end — a client whose management wouldn't allow time for proper role sessions — had 31 tickets in the first 30 days.</p>
+
+<h2>5. Leave Behind a Reference Card, Not a Manual</h2>
+<p>Users don't read manuals. What they do reach for is a one-page quick reference with the five steps for the tasks they do every day. I produce one per role — a single laminated A4 sheet with the key process flows in plain language, no screenshots, just numbered steps.</p>
+
+<p>The laminated card ends up pinned above the monitor. The manual ends up in a drawer. Design training materials for where they'll actually be used.</p>
+
+<div class="callout callout-ok">
+<strong>Takeaway:</strong> The investment in structured, role-based training always returns more than it costs. The support burden from under-trained users — both on the IT team and on the client's own staff — far exceeds the time spent running proper sessions before go-live.
+</div>
+
+<p>Reach me at <a href="mailto:kkeitumetse09@gmail.com">kkeitumetse09@gmail.com</a> if you're running an ERP rollout and want to compare approaches.</p>
+</article>
+
+<footer class="mt-16 border-t border-[#30363D] pt-8 pb-12">
+<div class="flex items-center justify-between font-mono text-sm text-[#8B949E]">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-base">terminal</span> EOF</span>
+<a class="hover:text-primary transition-colors" href="#top">return to top ^</a>
+</div>
+</footer>
+</main>
+
+<div class="fixed bottom-0 left-0 w-full h-8 bg-[#161B22] border-t border-[#30363D] flex items-center justify-between px-4 text-xs font-mono text-[#8B949E] z-50">
+<div class="flex items-center gap-4"><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> SYSTEM: ONLINE</span></div>
+<div><span class="text-primary">~/blog/erp_user_training_what_works.md</span></div>
+</div>
+<script>(function matrixRain(){const canvas=document.getElementById('matrix-rain'),ctx=canvas.getContext('2d'),BG='rgba(13,17,23,0.05)',GREEN='#06f943',BRIGHT='#ccffcc',FS=14,CHARS='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';let cols,drops;function init(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;cols=Math.floor(canvas.width/FS);drops=Array.from({length:cols},()=>Math.floor(Math.random()*-60));}function draw(){ctx.fillStyle=BG;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font=FS+'px monospace';for(let i=0;i<cols;i++){const char=CHARS[Math.floor(Math.random()*CHARS.length)];ctx.fillStyle=Math.random()>0.95?BRIGHT:GREEN;ctx.fillText(char,i*FS,drops[i]*FS);if(drops[i]*FS>canvas.height&&Math.random()>0.975)drops[i]=0;drops[i]++;}}init();setInterval(draw,50);window.addEventListener('resize',init);})();</script>
+</body></html>

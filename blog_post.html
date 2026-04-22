@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>How I Validate Client Data Before a Sage 50c Go-Live | Kopo@SysAdmin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Outfit:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#06f943",
+                        "background-dark": "#0D1117",
+                        "surface": "#161B22",
+                        "text-main": "#C9D1D9",
+                        "muted": "#8B949E",
+                        "border-color": "#30363D",
+                        "accent": "#58A6FF"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["Fira Code", "monospace"],
+                        "sans": ["Outfit", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px", "sm": "0.125rem",
+                        "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0D1117;
+            color: #C9D1D9;
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3 {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: #E6EDF3;
+            margin-top: 2em;
+            margin-bottom: 0.75em;
+        }
+        h1 { font-size: 2rem; line-height: 1.25; margin-top: 0; }
+        h2 { font-size: 1.35rem; border-bottom: 1px solid #30363D; padding-bottom: 0.3em; }
+        h3 { font-size: 1.1rem; color: #06f943; }
+
+        p { margin-bottom: 1.5em; font-weight: 300; color: #C9D1D9; }
+
+        a { color: #06f943; text-decoration: none; transition: all 0.2s; }
+        a:hover { text-shadow: 0 0 8px rgba(6,249,67,0.35); text-decoration: underline; }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.83em;
+            background-color: rgba(110,118,129,0.18);
+            padding: 0.2em 0.45em;
+            border-radius: 3px;
+            color: #a5d6ff;
+        }
+
+        pre {
+            background-color: #161B22;
+            border: 1px solid #30363D;
+            padding: 18px 20px;
+            overflow-x: auto;
+            margin-bottom: 1.5em;
+        }
+        pre code {
+            background: transparent;
+            padding: 0;
+            font-size: 0.84em;
+            color: #C9D1D9;
+        }
+
+        .kw  { color: #FF7B72; }
+        .str { color: #A5D6FF; }
+        .cmt { color: #8B949E; font-style: italic; }
+        .fn  { color: #D2A8FF; }
+        .num { color: #79C0FF; }
+        .prompt { color: #06f943; user-select: none; }
+
+        ul, ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+        ul li { list-style: none; position: relative; margin-bottom: 0.55em; }
+        ul li::before {
+            content: ">";
+            position: absolute; left: -1.4em;
+            color: #06f943;
+            font-family: 'Fira Code', monospace; font-weight: bold;
+        }
+        ol li { margin-bottom: 0.55em; padding-left: 0.4em; }
+
+        blockquote {
+            border-left: 3px solid #06f943;
+            padding: 0.5em 1em;
+            margin: 1.5em 0;
+            background: rgba(6,249,67,0.04);
+            color: #8B949E;
+            font-style: italic;
+        }
+
+        .callout {
+            border: 1px solid #30363D;
+            background: #161B22;
+            padding: 1em 1.25em;
+            margin-bottom: 1.5em;
+            border-left: 3px solid #58A6FF;
+        }
+        .callout-warn { border-left-color: #e3a826; }
+        .callout-ok   { border-left-color: #06f943; }
+
+        .tag {
+            display: inline-block;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            padding: 0.15em 0.6em;
+            border: 1px solid;
+            margin-right: 0.3em;
+        }
+
+        #matrix-rain {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1; opacity: 0.10; pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<canvas id="matrix-rain"></canvas>
+
+<!-- Navigation -->
+<header class="sticky top-0 z-50 w-full bg-[#0D1117]/90 backdrop-blur-sm border-b border-[#30363D]">
+<div class="max-w-[720px] mx-auto px-6 py-4 flex items-center justify-between">
+<a class="font-mono text-sm text-[#8B949E] hover:text-primary transition-colors flex items-center gap-2 group" href="blog.html">
+<span class="text-primary group-hover:text-white transition-colors">&lt;</span> cd ../blog
+    </a>
+<div class="text-sm font-mono text-[#8B949E] hidden sm:block">
+<span class="text-primary">Kopo@SysAdmin</span>:~/blog$
+    </div>
+</div>
+</header>
+
+<!-- Article -->
+<main class="flex-1 w-full max-w-[720px] mx-auto px-6 py-12 md:py-20 pb-24">
+
+<header class="mb-12">
+<div class="font-mono text-xs text-[#8B949E] mb-4 flex items-center gap-2">
+<span class="text-primary">cat</span> sage_migration_data_validation_checklist.md
+</div>
+<h1>How I Validate Client Data Before a Sage 50c Go-Live</h1>
+<div class="flex flex-wrap items-center gap-4 text-sm font-mono text-[#8B949E] mt-5 border-t border-[#30363D] pt-5">
+<span>2024-11-18</span>
+<span class="text-[#30363D]">|</span>
+<span>8 min read</span>
+<span class="text-[#30363D]">|</span>
+<span class="tag" style="color:#58A6FF; border-color:rgba(88,166,255,0.3); background:rgba(88,166,255,0.05)">tutorial</span>
+<span class="tag" style="color:#06f943; border-color:rgba(6,249,67,0.3); background:rgba(6,249,67,0.05)">sage-erp</span>
+<span class="tag" style="color:#8B949E; border-color:rgba(139,148,158,0.3)">data-migration</span>
+</div>
+</header>
+
+<article>
+
+<p>
+After implementing Sage 50c Pastel for 20+ clients at Businesoft, the single most common cause of a rocky go-live was not configuration errors or user training gaps — it was bad data getting into the system. A chart of accounts with duplicate codes. An opening balance that doesn't reconcile with the audited trial balance. A supplier record that was imported twice with slightly different names.
+</p>
+<p>
+These are fixable problems, but fixing them <em>after</em> go-live is expensive, embarrassing, and erodes client trust immediately. Fixing them <em>before</em> go-live costs a few hours of careful work. This post walks through the validation checklist I developed and used on every migration.
+</p>
+
+<h2>1. Understand What You're Migrating</h2>
+
+<p>
+Before touching any data, I sit down with the client's accountant or finance manager and agree on the scope. Sage 50c holds a lot — you don't necessarily migrate all of it on day one.
+</p>
+
+<div class="callout">
+<strong>Typical migration scope for a new Sage 50c implementation:</strong>
+<ul>
+<li>Chart of Accounts (CoA) — categories, account codes, VAT links</li>
+<li>Supplier and Customer master data — names, tax numbers, payment terms, contact details</li>
+<li>Inventory items — descriptions, units of measure, selling prices, tax categories</li>
+<li>Opening balances — as at the agreed cut-over date (usually end of a financial period)</li>
+</ul>
+</div>
+
+<p>
+Historical transactions (invoices, payments, journals from prior years) are almost never migrated — they stay in the old system for reference. Trying to migrate transaction history into Sage is where migrations go badly wrong and usually isn't worth the time. Agree this boundary upfront.
+</p>
+
+<h2>2. Extract and Audit the Source Data</h2>
+
+<p>
+Most clients hand you data in one of three states: a well-maintained Excel workbook, a partially-maintained Excel workbook, or a CSV export from an old accounting package like Pastel Evolution, QuickBooks, or — the most interesting one — a set of manual ledger books that someone has started digitising halfway through.
+</p>
+
+<p>
+The first thing I do is load the raw source file into Excel and run a quick audit pass:
+</p>
+
+<pre><code><span class="cmt">-- SQL-style logic, but done in Excel pivot tables / filters</span>
+
+<span class="cmt">Check 1: Duplicates in key columns</span>
+Supplier Name   → count where name appears &gt; 1 time
+Account Code    → count where code appears &gt; 1 time
+Tax Reg Number  → count where TRN appears &gt; 1 time (flag nulls too)
+
+<span class="cmt">Check 2: Missing required fields</span>
+COUNTBLANK(AccountCode column) → must be zero before import
+COUNTBLANK(SupplierName column) → must be zero
+
+<span class="cmt">Check 3: Data type consistency</span>
+AccountCode → should be numeric or alphanumeric in a consistent format
+OpeningBalance → should be numeric, not "1,234.00 BWP" or "N/A"
+PaymentTerms → should map to Sage valid values: 0, 7, 14, 30, 60</code></pre>
+
+<p>
+This pass usually surfaces 10–30 issues per client. I log each one in a shared Google Sheet (or Word doc if the client doesn't have Google Workspace) and work through them with the accountant before proceeding.
+</p>
+
+<h2>3. Map Source Fields to Sage Fields</h2>
+
+<p>
+Sage 50c's import templates have specific column requirements. The field names and accepted formats are not always intuitive. Here's a mapping example for the Supplier master import:
+</p>
+
+<pre><code><span class="cmt">Source column          → Sage Import Field         Notes</span>
+Supplier Name          → Supplier_Name             Max 40 chars — truncate if longer
+Tax Reg Number         → Tax_Reg_No                Format: BW + 9 digits (Botswana)
+Account Code           → Acc_Code                  Unique, max 8 chars
+Contact Person         → Contact_1                 Optional but useful
+Phone                  → Tel                       Digits only, no spaces
+Payment Terms (days)   → Terms                     Integer: 0, 7, 14, 30, 60
+Opening Balance        → Opening_Balance           Positive = credit (you owe them)
+Opening Balance Date   → Opening_Balance_Date      DD/MM/YYYY</code></pre>
+
+<div class="callout callout-warn">
+<strong>Watch out:</strong> Opening balances in Sage are entered from the perspective of what the business owes or is owed. A supplier opening balance of R5,000 means the business owes the supplier R5,000. Clients sometimes present this inverted. Always confirm the sign convention before importing.
+</div>
+
+<h2>4. Prepare the Import File</h2>
+
+<p>
+Once the mapping is agreed, I build the import CSV from the cleaned source data. I do this in Excel using a staging sheet — a separate tab that pulls from the cleaned data and transforms it into the exact Sage import format. This way the original data stays untouched and auditable.
+</p>
+
+<pre><code><span class="cmt">Staging sheet formula examples (Excel):</span>
+
+<span class="cmt">Truncate supplier name to 40 chars:</span>
+=LEFT(TRIM(SourceSheet!B2), 40)
+
+<span class="cmt">Ensure payment terms maps to valid Sage value (default 30 if blank):</span>
+=IF(ISBLANK(SourceSheet!G2), 30, SourceSheet!G2)
+
+<span class="cmt">Format date for Sage (DD/MM/YYYY):</span>
+=TEXT(SourceSheet!K2, "DD/MM/YYYY")
+
+<span class="cmt">Strip non-numeric characters from phone:</span>
+=SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SourceSheet!H2," ",""),"-",""),"+","")
+</code></pre>
+
+<p>
+After building the staging sheet, I export it as a <code>.csv</code> and do one final visual check — I open it in Notepad to confirm there are no stray commas, no BOM characters at the top (these break Sage's importer), and that the header row matches the Sage template exactly.
+</p>
+
+<h2>5. Test Import in a Clean Company</h2>
+
+<p>
+Never do a first import into the live company. I always create a test company in Sage first — it takes two minutes — and run the full import there. If anything breaks, the test company is disposable.
+</p>
+
+<p>
+What I check after a test import:
+</p>
+
+<ol>
+<li>Record count — source file had 87 suppliers, Sage now shows 87 suppliers.</li>
+<li>Spot-check 5–10 records manually against the source file (names, balances, terms).</li>
+<li>Run the Supplier Age Analysis report — opening balances should reflect correctly with the correct aging bucket based on the opening balance date.</li>
+<li>Check the Trial Balance — Creditors control account should match the sum of all supplier opening balances exactly.</li>
+</ol>
+
+<div class="callout callout-ok">
+<strong>The reconciliation test:</strong> Sum all supplier opening balances in Excel. Export the Sage Trial Balance after import. The Creditors Control (or Accounts Payable) account balance must equal that sum to the cent. If it doesn't, something was imported incorrectly. Do not proceed to live until this reconciles.
+</div>
+
+<h2>6. Get Sign-Off Before Going Live</h2>
+
+<p>
+Once the test import looks clean, I produce a brief validation report — usually a one-page summary — and present it to the client's accountant or financial manager. It covers:
+</p>
+
+<ul>
+<li>Number of records imported per category</li>
+<li>Total opening balances (Debtors, Creditors, Bank, Stock) with source vs. Sage comparison</li>
+<li>Any records excluded and why</li>
+<li>Sign-off line with date</li>
+</ul>
+
+<p>
+The sign-off is not bureaucratic friction — it protects both parties. If the client later says "the opening stock value is wrong," you have a document showing they confirmed it before go-live. More importantly, it forces the right conversation to happen at the right time, before anyone has entered live transactions on top of the data.
+</p>
+
+<h2>7. Lessons From the Field</h2>
+
+<blockquote>
+"The data you receive is never the data you were promised."
+</blockquote>
+
+<p>
+A few patterns I encountered repeatedly across 20+ implementations:
+</p>
+
+<ul>
+<li><strong>The duplicate supplier problem</strong> — "ABC Supplies" and "A.B.C Supplies (Pty) Ltd" are the same company. Always get a canonical name list confirmed by the client before importing.</li>
+<li><strong>The tax registration number gap</strong> — Many small businesses in Botswana don't have all supplier TRNs on record. Sage doesn't require them, but it's good practice to flag the gaps to the client rather than importing blank.</li>
+<li><strong>The mid-period cut-over</strong> — Clients sometimes want to go live mid-month. Opening balances then need to include transactions already processed in that partial period. Always cut over at month-end if you can negotiate it.</li>
+<li><strong>The stale inventory</strong> — Items that haven't moved in two years are still in the system. Ask the client to confirm the item list is current before importing; otherwise you're carrying dead stock into the new system.</li>
+</ul>
+
+<h2>Conclusion</h2>
+
+<p>
+A Sage 50c migration isn't technically complex — the tool is designed to be approachable. The complexity is in the data preparation. A systematic validation process, a clear field mapping, a reconciliation check, and a documented sign-off turn a potentially chaotic go-live into a predictable handover. The few hours you invest in validation before go-live save you days of cleanup after.
+</p>
+
+<p>
+If you're preparing for a Sage implementation and want to compare notes, feel free to reach out at <a href="mailto:kkeitumetse09@gmail.com">kkeitumetse09@gmail.com</a>.
+</p>
+
+</article>
+
+<!-- Footer -->
+<footer class="mt-16 border-t border-[#30363D] pt-8 pb-12">
+<div class="flex items-center justify-between font-mono text-sm text-[#8B949E]">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base">terminal</span> EOF
+    </span>
+<a class="hover:text-primary transition-colors" href="#top">return to top ^</a>
+</div>
+</footer>
+
+</main>
+
+<!-- Fixed Status Bar -->
+<div class="fixed bottom-0 left-0 w-full h-8 bg-[#161B22] border-t border-[#30363D] flex items-center justify-between px-4 text-xs font-mono text-[#8B949E] z-50">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span> SYSTEM: ONLINE</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-primary">~/blog/sage_migration_data_validation_checklist.md</span>
+</div>
+</div>
+
+<script>
+    (function matrixRain() {
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+        const BG    = 'rgba(13, 17, 23, 0.05)';
+        const GREEN  = '#06f943';
+        const BRIGHT = '#ccffcc';
+        const FS = 14;
+        const CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ><{}[]|\\/';
+        let cols, drops;
+        function init() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+            cols  = Math.floor(canvas.width / FS);
+            drops = Array.from({length: cols}, () => Math.floor(Math.random() * -60));
+        }
+        function draw() {
+            ctx.fillStyle = BG;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = FS + 'px monospace';
+            for (let i = 0; i < cols; i++) {
+                const char = CHARS[Math.floor(Math.random() * CHARS.length)];
+                ctx.fillStyle = Math.random() > 0.95 ? BRIGHT : GREEN;
+                ctx.fillText(char, i * FS, drops[i] * FS);
+                if (drops[i] * FS > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        init();
+        setInterval(draw, 50);
+        window.addEventListener('resize', init);
+    })();
+</script>
+</body></html>
